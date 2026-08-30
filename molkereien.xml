@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- ###################################################################
+     MILCHVERTRAG  ::  Molkerei-Definitionen  ::  FS25 Mod-Konzept
+
+     Diese Datei definiert alle waehlbaren Molkereien und die globalen
+     Regeln. Rein datengetrieben: neue Molkerei = neuer dairy-Block,
+     keine Code-Aenderung noetig. Nur die requirement-Auflagen brauchen
+     die passende Pruef-Logik im Script (Gesundheit, Kaelber-Haltedauer).
+     #################################################################### -->
+
+<milkContracts version="1">
+
+    <!-- ###############################################################
+         GLOBALE EINSTELLUNGEN  (gelten fuer jeden Vertrag)
+         ############################################################### -->
+    <settings>
+
+        <!-- Herdengesundheit als Bio-Kriterium:
+             gleitender Mittelwert ueber den Vertragszeitraum. -->
+        <health sampleOnDayChange="true"
+                weightByAnimalCount="true"
+                acrossAllHusbandries="true" />
+
+        <!-- Finales Modell: Was der Vertrag nicht nimmt (Ueberschuss ueber
+             dem Deckel), bleibt im Stall-Lager liegen. KEIN Auto-Marktverkauf
+             durch die Mod - der Spieler faehrt Ueberschuss bei Bedarf selbst
+             ueber die Spielbasis weg. -->
+        <surplus keepInStorage="true" />
+
+        <!-- Zielmenge/Deckel werden periodenbasiert gerechnet und
+             skalieren automatisch mit der Monatslaenge (daysPerPeriod).
+             referenceDays = Bezugsmonat fuer Prozent-/Literangaben. -->
+        <scaling scaleByDaysPerPeriod="true" referenceDays="30" />
+
+        <!-- Zielmenge = geschaetzte Jahresproduktion beim Abschluss
+             (aktueller Kuhbestand mal Produktivitaet). -->
+        <estimation source="herdAtSigning" horizon="annual" />
+
+    </settings>
+
+
+    <!-- ###############################################################
+         MOLKEREIEN
+
+         Attribut-Referenz pro dairy:
+
+           id           interner Schluessel (eindeutig, kein Leerzeichen)
+           title / desc l10n-Keys fuer Anzeige im Menue
+
+         pricing type="market|fixed"
+           marketMultiplier   nur bei market  (1.0 = Tagespreis)
+           pricePerLiter      nur bei fixed   (EUR pro Liter)
+
+         quota type="none|minimum|maximum"
+           percentOfEstimated nur bei minimum (Anteil Jahresschaetzung)
+           litersPerMonth     nur bei maximum (Deckel je Bezugsmonat)
+
+         payout interval="monthly|quarterly|yearly"
+
+         penalty factor="x"   nur sinnvoll bei quota=minimum
+           pro fehlendem Liter: Vertragspreis mal factor zurueck
+
+         requirements (optional):
+           minHerdHealth percent="x"   braucht Gesundheits-Check
+           minCalfAge months="x"       braucht Tierverkaufs-Hook
+         ############################################################### -->
+    <dairies>
+
+        <!-- 1) GENOSSENSCHAFT :: Basis / sicherer Default -->
+        <dairy id="cooperative"
+               title="$l10n_dairy_coop_title"
+               desc="$l10n_dairy_coop_desc">
+            <pricing type="market" marketMultiplier="1.0" />
+            <quota   type="none" />
+            <payout  interval="monthly" />
+            <duration months="6" />
+        </dairy>
+
+        <!-- 2) NORDMILCH-WERK :: Masse / Volumen -->
+        <dairy id="nordmilch"
+               title="$l10n_dairy_nordmilch_title"
+               desc="$l10n_dairy_nordmilch_desc">
+            <pricing type="fixed" pricePerLiter="1.05" />
+            <quota   type="minimum" percentOfEstimated="85" />
+            <payout  interval="halfyearly" />
+            <duration months="12" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <!-- 3) MARKTKONTOR :: Spekulant -->
+        <dairy id="marktkontor"
+               title="$l10n_dairy_marktkontor_title"
+               desc="$l10n_dairy_marktkontor_desc">
+            <pricing type="market" marketMultiplier="1.15" />
+            <quota   type="none" />
+            <payout  interval="monthly" />
+            <duration months="6" />
+        </dairy>
+
+        <!-- 4) BIOLAND-MOLKEREI :: Bio / Kern-Feature (health-gated) -->
+        <dairy id="bioland"
+               title="$l10n_dairy_bioland_title"
+               desc="$l10n_dairy_bioland_desc">
+            <pricing type="fixed" pricePerLiter="1.55" />
+            <quota   type="minimum" percentOfEstimated="60" />
+            <payout  interval="yearly" />
+            <duration months="24" />
+            <penalty factor="1.5" />
+            <requirements>
+                <minHerdHealth percent="80" />
+            </requirements>
+        </dairy>
+
+        <!-- 5) WEIDEHOF-MANUFAKTUR :: Tierwohl / Premium (Ausbau nach MVP) -->
+        <dairy id="weidehof"
+               title="$l10n_dairy_weidehof_title"
+               desc="$l10n_dairy_weidehof_desc">
+            <pricing type="fixed" pricePerLiter="1.84" />
+            <quota   type="minimum" percentOfEstimated="50" />
+            <payout  interval="yearly" />
+            <duration months="24" />
+            <penalty factor="1.5" />
+            <requirements>
+                <minHerdHealth percent="85" />
+                <minCalfAge months="12" />
+            </requirements>
+        </dairy>
+
+        <!-- 6) HOFMOLKEREI KLEIN :: Regional / Hoechstabnahme (Deckel) -->
+        <dairy id="hofmolkerei_klein"
+               title="$l10n_dairy_klein_title"
+               desc="$l10n_dairy_klein_desc">
+            <pricing type="fixed" pricePerLiter="1.90" />
+            <quota   type="maximum" litersPerMonth="4000" />
+            <payout  interval="monthly" />
+            <duration months="12" />
+        </dairy>
+
+        <dairy id="alpenmilch"
+               title="$l10n_dairy_alpenmilch_title"
+               desc="$l10n_dairy_alpenmilch_desc">
+            <pricing type="market" marketMultiplier="1.05" />
+            <quota   type="none" />
+            <payout  interval="quarterly" />
+            <duration months="12" />
+        </dairy>
+
+        <dairy id="frischlogistik"
+               title="$l10n_dairy_frischlogistik_title"
+               desc="$l10n_dairy_frischlogistik_desc">
+            <pricing type="fixed" pricePerLiter="1.10" />
+            <quota   type="minimum" percentOfEstimated="70" />
+            <payout  interval="monthly" />
+            <duration months="12" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="kaesewerk"
+               title="$l10n_dairy_kaesewerk_title"
+               desc="$l10n_dairy_kaesewerk_desc">
+            <pricing type="fixed" pricePerLiter="1.45" />
+            <quota   type="minimum" percentOfEstimated="55" />
+            <payout  interval="halfyearly" />
+            <duration months="18" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="discount"
+               title="$l10n_dairy_discount_title"
+               desc="$l10n_dairy_discount_desc">
+            <pricing type="fixed" pricePerLiter="0.95" />
+            <quota   type="none" />
+            <payout  interval="monthly" />
+            <duration months="6" />
+        </dairy>
+
+        <dairy id="weltmarkt"
+               title="$l10n_dairy_weltmarkt_title"
+               desc="$l10n_dairy_weltmarkt_desc">
+            <pricing type="market" marketMultiplier="1.25" />
+            <quota   type="none" />
+            <payout  interval="quarterly" />
+            <duration months="12" />
+        </dairy>
+
+        <dairy id="demeter"
+               title="$l10n_dairy_demeter_title"
+               desc="$l10n_dairy_demeter_desc">
+            <pricing type="fixed" pricePerLiter="1.95" />
+            <quota   type="minimum" percentOfEstimated="45" />
+            <payout  interval="yearly" />
+            <duration months="24" />
+            <penalty factor="1.5" />
+            <requirements>
+                <minHerdHealth percent="90" />
+                <minCalfAge months="15" />
+            </requirements>
+        </dairy>
+
+        <!-- ===================== ZIEGENMILCH ===================== -->
+        <dairy id="ziegenhof" milkType="goat"
+               title="$l10n_dairy_ziegenhof_title"
+               desc="$l10n_dairy_ziegenhof_desc">
+            <pricing type="market" marketMultiplier="1.05" />
+            <quota   type="none" />
+            <payout  interval="monthly" />
+            <duration months="6" />
+        </dairy>
+
+        <dairy id="ziegenkaeserei" milkType="goat"
+               title="$l10n_dairy_ziegenkaeserei_title"
+               desc="$l10n_dairy_ziegenkaeserei_desc">
+            <pricing type="market" marketMultiplier="1.20" />
+            <quota   type="minimum" percentOfEstimated="60" />
+            <payout  interval="halfyearly" />
+            <duration months="18" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="ziegen_biohof" milkType="goat"
+               title="$l10n_dairy_ziegen_biohof_title"
+               desc="$l10n_dairy_ziegen_biohof_desc">
+            <pricing type="market" marketMultiplier="1.35" />
+            <quota   type="minimum" percentOfEstimated="50" />
+            <payout  interval="yearly" />
+            <duration months="24" />
+            <penalty factor="1.5" />
+            <requirements>
+                <minHerdHealth percent="85" />
+            </requirements>
+        </dairy>
+
+    </dairies>
+
+</milkContracts>

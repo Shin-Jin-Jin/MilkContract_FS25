@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+    modDesc.xml  -  FS25 Mod: Milchvertrag
+
+    HINWEIS: descVersion muss zur installierten FS25-Version passen.
+    Den korrekten Wert aus einer offiziellen Mod / dem SDK deiner
+    Installation uebernehmen (Platzhalter unten).
+-->
+<modDesc descVersion="98">
+
+    <author>Shin_Jin_Jin</author>
+    <version>0.2.0.0</version>
+
+    <title>
+        <en>Milk Contract</en>
+        <de>Milchvertrag</de>
+        <fr>Contrat laitier</fr>
+        <es>Contrato de leche</es>
+        <it>Contratto del latte</it>
+        <pl>Kontrakt mleczny</pl>
+        <nl>Melkcontract</nl>
+    </title>
+
+    <description>
+        <en><![CDATA[Have you ever wondered what actually happens to all the milk your cows give, day after day? Normally it just goes to the selling point at the daily price - sometimes you get more for it, sometimes less. But there is another way. And let's take a calm, close look at how it works.
+
+Imagine you walk up to a dairy and sign a proper contract. You say: "I'll deliver my milk to you," and the dairy says: "Good - in return you'll get a fixed price from us." And because there are many different dairies, each one has its own ideas. One pays every month, another only once a year - but generously. One simply takes everything you have. The next wants a minimum amount. And the fine organic dairy? It pays the most, but looks very carefully at whether your cows are truly doing well.
+
+And here's the lovely part: once you've signed, the dairy collects the milk from your barn every day, all by itself. No more driving. Whatever the dairy doesn't need simply stays in storage - you can still sell that yourself. And when a payout is due, the register rings and a little message lets you know.
+
+But do you know what's especially clever? The offers change. Every year different dairies are on the table, some with short terms, some with long ones. And the longer you commit, the better the price. When your contract is about to end, you're told in good time - and you may renew on your old terms, with a small loyalty bonus on top. Quite handy, isn't it?
+
+And not just cows: goat milk gets its own contracts with its own dairies, too. Goat milk leaves the barn as a pallet - the dairy still picks it up automatically. In the menu you simply switch between cow and goat at the top, and you can even run a contract of each at the same time. But careful: a contract is a contract. Promise a minimum amount and fail to deliver, and you'll pay a penalty on the shortfall - shown clearly right when you sign. And if you really need to bail out early? You can, but it costs a termination fee, and the game asks you to confirm before it happens.
+
+That's how simple milk selling becomes a proper little business, where you decide: fast and flexible, or long and lucrative?
+
+Features:
+- Milk contract system with many different dairies
+- Fixed prices, minimum or maximum quotas, various payout intervals
+- Daily automatic pickup straight from the barn storage
+- Rotating offers, freshly assembled every year
+- Random contract durations with a price bonus for longer commitment
+- Timely notice before a contract ends, plus renewal with a loyalty bonus
+- Info-system messages on payout, expiry and renewal
+- Animal-welfare requirements (herd health) at the premium dairies
+- Support for cow AND goat milk (goat milk via pallet pickup)
+- Cow/goat switch in the menu; one contract per milk type at a time
+- Shortfall penalty on unmet minimum quotas (shown up front at signing)
+- Early cancellation possible - for a termination fee, with a confirmation prompt
+- Saveable and multiplayer-ready (server-authoritative)]]></en>
+        <de><![CDATA[Habt ihr euch schon mal gefragt, was eigentlich mit der ganzen Milch passiert, die eure Kühe Tag für Tag geben? Ganz normal wandert sie zum Tagespreis über die Verkaufsstelle - mal gibt es mehr Geld dafür, mal weniger. Aber es geht auch anders. Und wie das funktioniert, das schauen wir uns jetzt einmal ganz in Ruhe an.
+
+Stellt euch vor, ihr geht zu einer Molkerei und schließt einen richtigen Vertrag ab. Ihr sagt: "Ich liefere euch meine Milch", und die Molkerei sagt: "Gut, dafür bekommst du von uns einen festen Preis." Und weil es viele verschiedene Molkereien gibt, hat auch jede ihre eigenen Vorstellungen. Die eine zahlt jeden Monat, die andere nur einmal im Jahr - dafür aber ordentlich. Die eine nimmt einfach alles, was ihr habt. Die nächste möchte eine Mindestmenge. Und die feine Bio-Molkerei? Die zahlt am meisten, schaut aber ganz genau hin, ob es euren Kühen auch wirklich gut geht.
+
+Und jetzt kommt das Schöne: Habt ihr einmal unterschrieben, dann holt die Molkerei die Milch jeden Tag ganz von allein aus eurem Stall ab. Ihr müsst nichts mehr fahren. Was die Molkerei nicht braucht, das bleibt einfach im Lager liegen - das könnt ihr dann immer noch selbst verkaufen. Und wenn die Auszahlung ansteht, klingelt es in der Kasse, und eine kleine Nachricht sagt euch Bescheid.
+
+Aber wisst ihr, was besonders clever ist? Die Angebote wechseln. Jedes Jahr liegen andere Molkereien auf dem Tisch, mal mit kurzer, mal mit langer Laufzeit. Und je länger ihr euch bindet, desto besser wird der Preis. Läuft euer Vertrag bald aus, bekommt ihr rechtzeitig Bescheid - und dürft zu euren alten Konditionen verlängern, mit einem kleinen Treuebonus obendrauf. Ganz schön praktisch, oder?
+
+Und nicht nur Kühe: Auch für Ziegenmilch gibt es eigene Verträge mit eigenen Molkereien. Ziegenmilch kommt ja als Palette aus dem Stall - die Molkerei holt sie genauso automatisch ab. Im Menü schaltet ihr oben einfach zwischen Kuh und Ziege um und könnt sogar von beidem gleichzeitig einen Vertrag laufen haben. Aber Vorsicht: Ein Vertrag ist ein Vertrag. Wer eine Mindestmenge zusagt und am Ende nicht liefert, zahlt für die Fehlmenge eine Strafe - und die steht schon beim Abschluss klar dabei. Und wenn ihr wirklich einmal vorzeitig aussteigen wollt? Das geht, kostet aber eine Ablöse. Bevor es soweit ist, fragt euch das Spiel aber noch einmal ganz genau, ob ihr das auch wirklich wollt.
+
+So wird aus dem simplen Milchverkauf ein richtiges kleines Geschäft, bei dem ihr entscheidet: schnell und flexibel, oder lieber lang und lohnend?
+
+Funktionen:
+- Milch-Vertragssystem mit vielen unterschiedlichen Molkereien
+- Feste Preise, Mindest- oder Höchstmengen, verschiedene Auszahlungsrhythmen
+- Tägliche automatische Abholung direkt aus dem Stall-Lager
+- Wechselnde Angebote, die jedes Jahr neu zusammengestellt werden
+- Zufällige Vertragslaufzeiten mit Preisbonus für längere Bindung
+- Rechtzeitige Info vor Vertragsende und Verlängern mit Treuebonus
+- Meldungen im Info-System bei Auszahlung, Ablauf und Verlängerung
+- Tierwohl-Auflagen (Herdengesundheit) bei den Premium-Molkereien
+- Unterstützung für Kuh- UND Ziegenmilch (Ziegenmilch per Paletten-Abnahme)
+- Umschalter Kuh/Ziege im Menü; je ein Vertrag pro Milchtyp gleichzeitig
+- Vertragsstrafe bei Fehlmenge (transparent schon beim Abschluss angezeigt)
+- Vorzeitige Kündigung möglich - gegen Ablöse und mit Sicherheitsabfrage
+- Speicherbar und mehrspieler-tauglich (Server-autoritativ)]]></de>
+    </description>
+
+    <iconFilename>icon_MilkContract.dds</iconFilename>
+
+    <multiplayer supported="true"/>
+
+    <l10n filenamePrefix="translations/translation"/>
+
+    <extraSourceFiles>
+        <sourceFile filename="scripts/MilkDairy.lua"/>
+        <sourceFile filename="scripts/MilkContractLoader.lua"/>
+        <sourceFile filename="scripts/MilkContract.lua"/>
+        <sourceFile filename="scripts/MilkContractManager.lua"/>
+    </extraSourceFiles>
+
+</modDesc>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<l10n>
+    <texts>
+        <!-- Molkerei-Namen & Beschreibungen -->
+        <text name="dairy_coop_title"        text="Genossenschaft"/>
+        <text name="dairy_coop_desc"         text="Sicherer Default: Marktpreis, keine Verpflichtung, kein Risiko."/>
+        <text name="dairy_nordmilch_title"   text="Nordmilch-Werk"/>
+        <text name="dairy_nordmilch_desc"    text="Volumen: garantierter Festpreis, dafür hohe Quote (~85 %)."/>
+        <text name="dairy_marktkontor_title" text="Marktkontor"/>
+        <text name="dairy_marktkontor_desc"  text="Spekulant: Markt +15 %, kein Zwang, Ertrag schwankt."/>
+        <text name="dairy_bioland_title"     text="BioLand-Molkerei"/>
+        <text name="dairy_bioland_desc"      text="Bio: hoher Festpreis gegen Herdengesundheit ab 80 %."/>
+        <text name="dairy_weidehof_title"    text="Weidehof-Manufaktur"/>
+        <text name="dairy_weidehof_desc"     text="Premium/Tierwohl: höchster Preis, Gesundheit ab 85 % und Kälber-Haltedauer."/>
+        <text name="dairy_klein_title"       text="Hofmolkerei Klein"/>
+        <text name="dairy_klein_desc"        text="Regional: sehr hoher Preis, aber begrenzte Höchstabnahme."/>
+
+        <!-- Menü-Seite -->
+        <text name="mc_pageTitle"    text="Milchvertrag"/>
+        <text name="mc_colDairy"     text="Molkerei"/>
+        <text name="mc_colPrice"     text="Preis / Liter"/>
+        <text name="mc_colQuota"     text="Menge"/>
+        <text name="mc_colReq"       text="Auflagen"/>
+        <text name="mc_price"        text="Preis / Liter"/>
+        <text name="mc_quotaLabel"   text="Menge"/>
+        <text name="mc_payoutLabel"  text="Auszahlung"/>
+        <text name="mc_reqLabel"     text="Auflagen"/>
+        <text name="mc_statusLabel"  text="Status"/>
+        <text name="mc_activeHeader"    text="Laufender Vertrag"/>
+        <text name="mc_delivered"       text="Geliefert"/>
+        <text name="mc_progress"        text="Fortschritt"/>
+        <text name="mc_secure"          text="Sicher verdient"/>
+        <text name="mc_projected"       text="Voraussichtlich (gesamt)"/>
+        <text name="mc_nextPayout"      text="Nächste Auszahlung"/>
+        <text name="mc_inMonths"        text="in %d Monaten"/>
+        <text name="mc_nextPeriodSoon"  text="nächste Periode"/>
+        <text name="mc_reqMet"          text="erfüllt"/>
+        <text name="mc_reqNotMet"       text="nicht erfüllt"/>
+        <text name="mc_extend"         text="Verlängern"/>
+        <text name="mc_expiringSoon"   text="läuft aus - Verlängern möglich"/>
+        <text name="mc_viewOnly"       text="Vertrag läuft - nur Ansicht, kein Wechsel bis Vertragsende"/>
+        <text name="mc_remaining"      text="noch %d Monate"/>
+        <text name="mc_durationShort"   text="Laufzeit %d M"/>
+        <text name="mc_payout_monthly"   text="monatlich"/>
+        <text name="mc_payout_quarterly" text="quartalsweise"/>
+        <text name="mc_payout_halfyearly" text="halbjährlich"/>
+        <text name="mc_payout_yearly"    text="jährlich"/>
+        <text name="mc_emptyList"    text="Keine Molkereien geladen."/>
+        <text name="mc_sign"         text="Vertrag abschließen"/>
+        <text name="mc_cancel"       text="Kündigen"/>
+        <text name="mc_signed"       text="Vertrag abgeschlossen."/>
+        <text name="mc_signFailed"   text="Vertrag konnte nicht abgeschlossen werden (läuft evtl. schon einer?)."/>
+        <text name="mc_cancelled"    text="Vertrag gekündigt."/>
+        <text name="mc_activeContract" text="Aktiv: %s"/>
+        <text name="mc_noContract"   text="Kein aktiver Vertrag"/>
+        <text name="mc_estimate"     text="Schätzung ~%s l / Jahr, Ziel ~%s l"/>
+
+        <!-- Kurzlabels in der Liste -->
+        <text name="mc_market"       text="Markt"/>
+        <text name="mc_minQuota"     text="min"/>
+        <text name="mc_maxCap"       text="max"/>
+        <text name="mc_noQuota"      text="frei"/>
+        <text name="mc_noReq"        text="-"/>
+        <text name="mc_reqHealthShort" text="Gesundheit >="/>
+        <text name="mc_reqCalfShort"   text="Kälber >="/>
+        <text name="dairy_alpenmilch_title" text="Alpenmilch-Genossenschaft"/>
+        <text name="dairy_alpenmilch_desc" text="Regionale Genossenschaft: leicht über Marktpreis, keine Auflagen."/>
+        <text name="dairy_frischlogistik_title" text="FrischLogistik AG"/>
+        <text name="dairy_frischlogistik_desc" text="Großabnehmer: solider Festpreis, dafür hohe Quote, monatlich."/>
+        <text name="dairy_kaesewerk_title" text="KäseWerk Süd"/>
+        <text name="dairy_kaesewerk_desc" text="Käserei: guter Festpreis, halbjährliche Zahlung, mittlere Bindung."/>
+        <text name="dairy_discount_title" text="Discount-Molkerei"/>
+        <text name="dairy_discount_desc" text="Niedriger Festpreis, aber völlig flexibel und ohne Auflagen."/>
+        <text name="dairy_weltmarkt_title" text="Weltmarkt-Export"/>
+        <text name="dairy_weltmarkt_desc" text="Stark marktgekoppelt (+25%): hohe Chance, hohes Risiko."/>
+        <text name="dairy_demeter_title" text="Demeter-Hof"/>
+        <text name="dairy_demeter_desc" text="Premium: Spitzenpreis, aber strengste Tierwohl-Auflagen, lange Bindung."/>
+        <text name="mc_notifyPayout" text="Milchvertrag: %s ausgezahlt (%s)"/>
+        <text name="mc_notifyEnded" text="Milchvertrag mit %s ausgelaufen - neue Angebote verfügbar"/>
+        <text name="mc_notifyExpiring" text="Milchvertrag mit %s läuft bald aus - Verlängern im Menü möglich"/>
+        <text name="mc_notifyExtended" text="Milchvertrag mit %s verlängert"/>
+        <text name="dairy_ziegenhof_title" text="Ziegenhof am Bach"/>
+        <text name="dairy_ziegenhof_desc" text="Kleiner Ziegenhof: guter Festpreis, monatlich, kurze Bindung, keine Auflagen."/>
+        <text name="dairy_ziegenkaeserei_title" text="Ziegenkäserei Bergblick"/>
+        <text name="dairy_ziegenkaeserei_desc" text="Käserei für Ziegenmilch: hoher Festpreis, dafür Mindestmenge und mittlere Bindung."/>
+        <text name="dairy_ziegen_biohof_title" text="Bio-Ziegenhof Sonnenwiese"/>
+        <text name="dairy_ziegen_biohof_desc" text="Premium-Ziegenmilch: Spitzenpreis, lange Bindung und Tierwohl-Auflage."/>
+        <text name="mc_toggleType" text="Kuh/Ziege"/>
+        <text name="mc_typeCow"    text="Kuh"/>
+        <text name="mc_typeGoat"   text="Ziege"/>
+        <text name="mc_cancelConfirm" text="Vertrag vorzeitig kündigen? Es wird eine Vertragsstrafe von %s fällig."/>
+        <text name="mc_notifyCancelled" text="Milchvertrag mit %s vorzeitig gekündigt (Strafe %s)"/>
+        <text name="mc_penaltyClause" text="Strafe: Fehlmenge x Preis x %.1f"/>
+        <text name="mc_penaltyLabel" text="Strafe"/>
+        <text name="mc_penaltyValue" text="Fehlmenge x Preis x %.1f"/>
+        <text name="mc_notifyExtendedDebt" text="Milchvertrag mit %s verlängert - Nachlieferung %s l"/>
+        <text name="mc_carryDebt" text="(inkl. %s l Nachlieferung)"/>
+        <text name="mc_signConfirm" text="Vertrag mit %s abschließen?\nLaufzeit %d Monate, Preis %s/l, Ziel ca. %s l."/>
+        <text name="mc_extendConfirm" text="Vertrag mit %s verlängern?\nGleiche Konditionen plus Treuebonus."/>
+        <text name="mc_extendConfirmDebt" text="Vertrag mit %s verlängern?\nOffene Fehlmenge von %s l wird als Nachlieferung übernommen (statt Strafe)."/>
+        <text name="mc_notifyEndedPenalty" text="Milchvertrag mit %s nicht erfüllt - Strafe von %s fällig"/>
+    </texts>
+</l10n>

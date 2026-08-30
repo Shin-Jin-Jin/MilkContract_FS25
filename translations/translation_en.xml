@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<l10n>
+    <texts>
+        <text name="dairy_coop_title"        text="Cooperative"/>
+        <text name="dairy_coop_desc"         text="Safe default: market price, no commitment, no risk."/>
+        <text name="dairy_nordmilch_title"   text="Nordmilch Plant"/>
+        <text name="dairy_nordmilch_desc"    text="Volume: guaranteed fixed price, but a high quota (~85%)."/>
+        <text name="dairy_marktkontor_title" text="Market Trader"/>
+        <text name="dairy_marktkontor_desc"  text="Speculator: market +15%, no obligation, income fluctuates."/>
+        <text name="dairy_bioland_title"     text="BioLand Dairy"/>
+        <text name="dairy_bioland_desc"      text="Organic: high fixed price requiring herd health of 80%+."/>
+        <text name="dairy_weidehof_title"    text="Weidehof Manufactory"/>
+        <text name="dairy_weidehof_desc"     text="Premium/welfare: highest price, health 85%+ and calf-keeping rule."/>
+        <text name="dairy_klein_title"       text="Klein Farm Dairy"/>
+        <text name="dairy_klein_desc"        text="Regional: very high price, but a limited purchase cap."/>
+
+        <text name="mc_pageTitle"    text="Milk Contract"/>
+        <text name="mc_colDairy"     text="Dairy"/>
+        <text name="mc_colPrice"     text="Price / liter"/>
+        <text name="mc_colQuota"     text="Quantity"/>
+        <text name="mc_colReq"       text="Requirements"/>
+        <text name="mc_price"       text="Price / liter"/>
+        <text name="mc_quotaLabel"  text="Quantity"/>
+        <text name="mc_payoutLabel" text="Payout"/>
+        <text name="mc_reqLabel"    text="Requirements"/>
+        <text name="mc_statusLabel" text="Status"/>
+        <text name="mc_activeHeader"    text="Active contract"/>
+        <text name="mc_delivered"       text="Delivered"/>
+        <text name="mc_progress"        text="Progress"/>
+        <text name="mc_secure"          text="Secured"/>
+        <text name="mc_projected"       text="Projected (total)"/>
+        <text name="mc_nextPayout"      text="Next payout"/>
+        <text name="mc_inMonths"        text="in %d months"/>
+        <text name="mc_nextPeriodSoon"  text="next period"/>
+        <text name="mc_reqMet"          text="met"/>
+        <text name="mc_reqNotMet"       text="not met"/>
+        <text name="mc_extend"         text="Renew"/>
+        <text name="mc_expiringSoon"   text="expiring - renewal available"/>
+        <text name="mc_viewOnly"       text="Contract active - view only until it ends"/>
+        <text name="mc_remaining"      text="%d months left"/>
+        <text name="mc_durationShort"   text="%d M term"/>
+        <text name="mc_payout_monthly"   text="monthly"/>
+        <text name="mc_payout_quarterly" text="quarterly"/>
+        <text name="mc_payout_halfyearly" text="half-yearly"/>
+        <text name="mc_payout_yearly"    text="yearly"/>
+        <text name="mc_emptyList"    text="No dairies loaded."/>
+        <text name="mc_sign"         text="Sign contract"/>
+        <text name="mc_cancel"       text="Cancel"/>
+        <text name="mc_signed"       text="Contract signed."/>
+        <text name="mc_signFailed"   text="Could not sign contract (one may already be active)."/>
+        <text name="mc_cancelled"    text="Contract cancelled."/>
+        <text name="mc_activeContract" text="Active: %s"/>
+        <text name="mc_noContract"   text="No active contract"/>
+        <text name="mc_estimate"     text="Estimate ~%s l / year, target ~%s l"/>
+
+        <text name="mc_market"       text="Market"/>
+        <text name="mc_minQuota"     text="min"/>
+        <text name="mc_maxCap"       text="max"/>
+        <text name="mc_noQuota"      text="free"/>
+        <text name="mc_noReq"        text="-"/>
+        <text name="mc_reqHealthShort" text="health >="/>
+        <text name="mc_reqCalfShort"   text="calves >="/>
+        <text name="dairy_alpenmilch_title" text="Alpine Dairy Co-op"/>
+        <text name="dairy_alpenmilch_desc" text="Regional co-op: slightly above market price, no requirements."/>
+        <text name="dairy_frischlogistik_title" text="FreshLogistics Inc."/>
+        <text name="dairy_frischlogistik_desc" text="Bulk buyer: solid fixed price, but high quota, monthly."/>
+        <text name="dairy_kaesewerk_title" text="South Cheese Works"/>
+        <text name="dairy_kaesewerk_desc" text="Cheese dairy: good fixed price, half-yearly payout, medium term."/>
+        <text name="dairy_discount_title" text="Discount Dairy"/>
+        <text name="dairy_discount_desc" text="Low fixed price, but fully flexible with no requirements."/>
+        <text name="dairy_weltmarkt_title" text="World Market Export"/>
+        <text name="dairy_weltmarkt_desc" text="Strongly market-linked (+25%): high reward, high risk."/>
+        <text name="dairy_demeter_title" text="Demeter Farm"/>
+        <text name="dairy_demeter_desc" text="Premium: top price, but strictest welfare requirements, long term."/>
+        <text name="mc_notifyPayout" text="Milk contract: %s paid out (%s)"/>
+        <text name="mc_notifyEnded" text="Milk contract with %s ended - new offers available"/>
+        <text name="mc_notifyExpiring" text="Milk contract with %s expiring soon - renew in the menu"/>
+        <text name="mc_notifyExtended" text="Milk contract with %s renewed"/>
+        <text name="dairy_ziegenhof_title" text="Creekside Goat Farm"/>
+        <text name="dairy_ziegenhof_desc" text="Small goat farm: good fixed price, monthly, short term, no requirements."/>
+        <text name="dairy_ziegenkaeserei_title" text="Bergblick Goat Cheesery"/>
+        <text name="dairy_ziegenkaeserei_desc" text="Goat-milk cheesery: high fixed price, but minimum quota and medium term."/>
+        <text name="dairy_ziegen_biohof_title" text="Sonnenwiese Organic Goat Farm"/>
+        <text name="dairy_ziegen_biohof_desc" text="Premium goat milk: top price, long term and a welfare requirement."/>
+        <text name="mc_toggleType" text="Cow/Goat"/>
+        <text name="mc_typeCow"    text="Cow"/>
+        <text name="mc_typeGoat"   text="Goat"/>
+        <text name="mc_cancelConfirm" text="Cancel contract early? An early-termination penalty of %s will apply."/>
+        <text name="mc_notifyCancelled" text="Milk contract with %s cancelled early (penalty %s)"/>
+        <text name="mc_penaltyClause" text="Penalty: shortfall x price x %.1f"/>
+        <text name="mc_penaltyLabel" text="Penalty"/>
+        <text name="mc_penaltyValue" text="shortfall x price x %.1f"/>
+        <text name="mc_notifyExtendedDebt" text="Milk contract with %s renewed - carry-over %s l"/>
+        <text name="mc_carryDebt" text="(incl. %s l carry-over)"/>
+        <text name="mc_signConfirm" text="Sign a contract with %s?\nTerm %d months, price %s/l, target approx. %s l."/>
+        <text name="mc_extendConfirm" text="Renew the contract with %s?\nSame terms plus loyalty bonus."/>
+        <text name="mc_extendConfirmDebt" text="Renew the contract with %s?\nAn open shortfall of %s l will be carried over as redelivery (instead of a penalty)."/>
+        <text name="mc_notifyEndedPenalty" text="Milk contract with %s unfulfilled - penalty of %s charged"/>
+    </texts>
+</l10n>

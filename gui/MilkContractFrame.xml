@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<GUI name="MilkContractFrame" returnScreenCallback="onClickBack">
+    <GuiElement profile="mc_mainContainer">
+
+        <!-- Kopfzeile -->
+        <GuiElement profile="fs25_menuHeaderPanel" size="0.805 0.1" position="0.0 0.074">
+            <Text profile="fs25_menuHeaderTitle" id="categoryHeaderText" text="$l10n_mc_pageTitle"/>
+        </GuiElement>
+
+        <ThreePartBitmap profile="fs25_lineSeparatorTopHighlighted" size="0.98 0.003"/>
+
+        <!-- Kuh/Ziege-Umschalter (natives Seiten-Element mit Pfeilen) -->
+        <MultiTextOption profile="mc_typeSelector" id="milkTypeSelector" onClick="onClickMilkTypeSelector"/>
+
+        <!-- Ueberschrift ueber der Liste (Vergleichsspalten) -->
+        <GuiElement profile="mc_listHeaderRow" size="0.42 0.03" position="0.0 -0.02">
+            <Text profile="mc_listHeader" position="20px 0px"  text="$l10n_mc_colDairy"/>
+            <Text profile="mc_listHeader" position="300px 0px" text="$l10n_mc_colPrice"/>
+            <Text profile="mc_listHeader" position="430px 0px" text="$l10n_mc_colQuota"/>
+            <ThreePartBitmap profile="fs25_lineSeparatorTop" position="0px -18px"/>
+        </GuiElement>
+
+        <!-- Hinweis "nur Ansicht" (unter der Liste, nur bei aktivem Vertrag) -->
+        <Text profile="mc_viewOnlyHint" id="viewOnlyHint"
+              position="20px 0.035" text="$l10n_mc_viewOnly" visible="false"/>
+
+        <!-- LINKS: Molkerei-Liste (Name | Preis | Menge = Vergleich) -->
+        <GuiElement profile="mc_listContainer">
+            <SmoothList id="dairyList" visible="true">
+                <ListItem profile="mc_listItem" name="default">
+                    <Text profile="mc_nameText" name="nameText"
+                          textVerticalAlignment="center"
+                          position="20px 0" size="270px 100%"/>
+                    <Text profile="mc_listPriceText" name="priceText"
+                          textVerticalAlignment="center"
+                          position="300px 0" size="125px 100%"/>
+                    <Text profile="mc_listPriceText" name="quotaText"
+                          textVerticalAlignment="center"
+                          position="430px 0" size="110px 100%"/>
+                </ListItem>
+            </SmoothList>
+
+            <ThreePartBitmap profile="fs25_listSliderBox" with="anchorTopRight">
+                <Slider profile="fs25_listSlider" dataElementId="dairyList"/>
+            </ThreePartBitmap>
+        </GuiElement>
+
+        <!-- RECHTS: Detailpanel (breiter, flache Elemente, per Code umgeschaltet) -->
+        <GuiElement profile="mc_detailPanel">
+            <Text profile="mc_detailTitle" id="detailTitle" text=""/>
+            <Text profile="mc_detailSub" id="activeSub" position="24px -60px" text="" visible="false"/>
+
+            <!-- GRUPPE A: Molkerei-Detail (kein aktiver Vertrag) -->
+            <Text profile="mc_detailLabel" id="lblPrice"  position="24px -84px"  text="$l10n_mc_price"/>
+            <Text profile="mc_detailValue" id="detailPrice"  position="330px -84px"  text="-"/>
+            <Text profile="mc_detailLabel" id="lblQuota"  position="24px -120px" text="$l10n_mc_quotaLabel"/>
+            <Text profile="mc_detailValue" id="detailQuota"  position="330px -120px" text="-"/>
+            <Text profile="mc_detailLabel" id="lblPayout" position="24px -156px" text="$l10n_mc_payoutLabel"/>
+            <Text profile="mc_detailValue" id="detailPayout" position="330px -156px" text="-"/>
+            <Text profile="mc_detailLabel" id="lblPenalty" position="24px -192px" text="$l10n_mc_penaltyLabel"/>
+            <Text profile="mc_detailValue" id="detailPenalty" position="330px -192px" text="-"/>
+            <Text profile="mc_detailLabel" id="lblReq"    position="24px -228px" text="$l10n_mc_reqLabel"/>
+            <Text profile="mc_detailReqValue" id="detailReq"  position="330px -228px" text="-"/>
+            <ThreePartBitmap profile="fs25_lineSeparatorTop" id="sepA" size="640px 2px" position="24px -288px"/>
+            <Text profile="mc_detailLabel" id="lblStatus" position="24px -304px" text="$l10n_mc_statusLabel"/>
+            <Text profile="mc_detailValue" id="detailStatus" position="330px -304px" text="-"/>
+            <Text profile="mc_detailReqValue" id="detailEstimate" position="24px -344px" size="520px 60px" text="-"/>
+
+            <!-- GRUPPE B: Status laufender Vertrag (aktiver Vertrag) -->
+            <Text profile="mc_detailLabel" id="lblDelivered" position="24px -104px" text="$l10n_mc_delivered" visible="false"/>
+            <Text profile="mc_detailValue" id="actDelivered" position="330px -104px" text="-" visible="false"/>
+            <Text profile="mc_detailLabel" id="lblProgress"  position="24px -142px" text="$l10n_mc_progress" visible="false"/>
+            <Text profile="mc_detailValue" id="actProgress"  position="330px -142px" text="-" visible="false"/>
+            <ThreePartBitmap profile="fs25_lineSeparatorTop" id="sepB1" size="640px 2px" position="24px -184px" visible="false"/>
+            <Text profile="mc_detailLabel" id="lblSecure"    position="24px -212px" text="$l10n_mc_secure" visible="false"/>
+            <Text profile="mc_detailValue" id="actSecure"    position="330px -212px" text="-" visible="false"/>
+            <Text profile="mc_detailLabel" id="lblProjected" position="24px -250px" text="$l10n_mc_projected" visible="false"/>
+            <Text profile="mc_detailValue" id="actProjected" position="330px -250px" text="-" visible="false"/>
+            <Text profile="mc_detailLabel" id="lblNext"      position="24px -288px" text="$l10n_mc_nextPayout" visible="false"/>
+            <Text profile="mc_detailValue" id="actNext"      position="330px -288px" text="-" visible="false"/>
+            <ThreePartBitmap profile="fs25_lineSeparatorTop" id="sepB2" size="640px 2px" position="24px -330px" visible="false"/>
+            <Text profile="mc_detailLabel" id="lblReqA"      position="24px -358px" text="$l10n_mc_reqLabel" visible="false"/>
+            <Text profile="mc_detailReqValue" id="actReq"    position="330px -358px" size="360px 60px" text="-" visible="false"/>
+        </GuiElement>
+
+        <!-- Hinweis wenn keine Molkereien geladen -->
+        <Text profile="mc_emptyText" id="emptyText"
+              text="$l10n_mc_emptyList"
+              position="0.0 0.0" size="0.42 0.05" visible="false"/>
+
+    </GuiElement>
+</GUI>

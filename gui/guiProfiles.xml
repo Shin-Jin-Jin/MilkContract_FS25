@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUIProfiles>
+    <!-- Hauptcontainer der Seite -->
+    <Profile name="mc_mainContainer" extends="fs25_menuContainer" with="anchorMiddleLeft">
+        <position value="134px -0.03" />
+    </Profile>
+
+    <!-- Ueberschrift ueber der Liste -->
+    <Profile name="mc_listHeaderRow" extends="emptyPanel" with="anchorTopLeft" />
+
+    <Profile name="mc_listHeader" extends="fs25_textDefault" with="anchorTopLeft">
+        <textSize value="16px" />
+        <textBold value="true" />
+        <textUpperCase value="true" />
+        <textColor value="$preset_colorWhite_50" />
+        <textAlignment value="left" />
+    </Profile>
+
+    <!-- Linke Spalte: Liste -->
+    <Profile name="mc_listContainer" extends="baseReference" with="anchorBottomLeft">
+        <position value="0.0 0.06" />
+        <size value="0.42 0.66" />
+    </Profile>
+
+    <Profile name="mc_listItem" extends="baseReference" with="anchorTopStretchingX alternating">
+        <height value="44px"/>
+        <imageColor value="$preset_fs25_colorGrey" />
+        <imageSelectedColor value="$preset_fs25_colorMainHighlight" />
+        <alternateBackgroundColor value="$preset_fs25_colorGreyDark_50" />
+    </Profile>
+
+    <Profile name="mc_nameText" extends="fs25_textDefault" with="anchorStretchingYLeft">
+        <textBold value="true" />
+        <textSize value="17px" />
+        <textAlignment value="left" />
+        <textColor value="$preset_fs25_colorMainLight" />
+        <textSelectedColor value="$preset_fs25_colorMainDark" />
+    </Profile>
+
+    <Profile name="mc_listPriceText" extends="fs25_textDefault" with="anchorStretchingYLeft">
+        <textBold value="false" />
+        <textSize value="16px" />
+        <textAlignment value="left" />
+        <textColor value="$preset_fs25_colorActive" />
+        <textSelectedColor value="$preset_fs25_colorMainDark" />
+    </Profile>
+
+    <!-- Rechte Spalte: Detailpanel -->
+    <Profile name="mc_detailPanel" extends="emptyPanel" with="anchorBottomLeft">
+        <position value="0.46 0.06" />
+        <size value="0.52 0.66" />
+        <imageSliceId value="gui.colorPreset" />
+        <imageColor value="$preset_fs25_colorMainDark_90" />
+    </Profile>
+
+    <Profile name="mc_typeSelector" extends="fs25_subCategorySelector" with="anchorTopRight">
+        <size value="360px 42px" />
+        <absoluteSizeOffset value="0px 0px" />
+        <position value="-70px -30px" />
+    </Profile>
+
+    <Profile name="mc_detailSub" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="0.9 30px" />
+        <textSize value="18px" />
+        <textBold value="true" />
+        <textAlignment value="left" />
+        <textColor value="$preset_fs25_colorActive" />
+    </Profile>
+
+    <Profile name="mc_detailTitle" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="24px -24px" />
+        <size value="0.9 40px" />
+        <textSize value="26px" />
+        <textBold value="true" />
+        <textAlignment value="left" />
+        <textColor value="$preset_fs25_colorMainLight" />
+    </Profile>
+
+    <Profile name="mc_detailLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="300px 26px" />
+        <textSize value="17px" />
+        <textUpperCase value="true" />
+        <textAlignment value="left" />
+        <textColor value="$preset_colorWhite_50" />
+    </Profile>
+
+    <Profile name="mc_viewOnlyHint" extends="fs25_textDefault" with="anchorBottomLeft">
+        <size value="0.42 26px" />
+        <textSize value="15px" />
+        <textAlignment value="left" />
+        <textColor value="$preset_fs25_colorActive" />
+    </Profile>
+
+    <Profile name="mc_detailValue" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="320px 26px" />
+        <textSize value="18px" />
+        <textBold value="true" />
+        <textAlignment value="left" />
+        <textColor value="$preset_fs25_colorMainLight" />
+    </Profile>
+
+    <Profile name="mc_detailReqValue" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="440px 60px" />
+        <textSize value="17px" />
+        <textAlignment value="left" />
+        <textColor value="$preset_fs25_colorMainHighlight" />
+    </Profile>
+
+    <Profile name="mc_infoText" extends="fs25_textDefault" with="anchorBottomLeft">
+        <textSize value="18px" />
+        <textAlignment value="left" />
+        <textColor value="$preset_colorWhite_50" />
+    </Profile>
+
+    <Profile name="mc_emptyText" extends="fs25_textDefault" with="anchorMiddleCenter">
+        <textBold value="true" />
+        <textSize value="20px" />
+        <textAlignment value="center" />
+        <textColor value="$preset_colorWhite_50" />
+    </Profile>
+</GUIProfiles>
