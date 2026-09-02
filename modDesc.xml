@@ -9,7 +9,7 @@
 <modDesc descVersion="98">
 
     <author>Shin_Jin_Jin</author>
-    <version>0.2.0.0</version>
+    <version>0.4.0.0</version>
 
     <title>
         <en>Milk Contract</en>
@@ -30,7 +30,7 @@ And here's the lovely part: once you've signed, the dairy collects the milk from
 
 But do you know what's especially clever? The offers change. Every year different dairies are on the table, some with short terms, some with long ones. And the longer you commit, the better the price. When your contract is about to end, you're told in good time - and you may renew on your old terms, with a small loyalty bonus on top. Quite handy, isn't it?
 
-And not just cows: goat milk gets its own contracts with its own dairies, too. Goat milk leaves the barn as a pallet - the dairy still picks it up automatically. In the menu you simply switch between cow and goat at the top, and you can even run a contract of each at the same time. But careful: a contract is a contract. Promise a minimum amount and fail to deliver, and you'll pay a penalty on the shortfall - shown clearly right when you sign. And if you really need to bail out early? You can, but it costs a termination fee, and the game asks you to confirm before it happens.
+And not just cows: goat milk gets a whole line-up of its own dairies, too - from a soap workshop and a fine cheesery to natural cosmetics. Goat milk leaves the barn as a pallet - the dairy still picks it up automatically. In the menu you simply switch between cow and goat at the top, and you can even run a contract of each at the same time. And it does not stop at two types: buffalo milk has its own dairies too - from a mozzarella workshop to a delicatessen dairy. Buffalo milk comes from the tank like cow milk. In the menu you page between cow, goat and buffalo at the top, and you can run a contract of each at once. But careful: a contract is a contract. Promise a minimum amount and fail to deliver, and you'll pay a penalty on the shortfall - shown clearly right when you sign. And if you really need to bail out early? You can, but it costs a termination fee, and the game asks you to confirm before it happens.
 
 That's how simple milk selling becomes a proper little business, where you decide: fast and flexible, or long and lucrative?
 
@@ -43,11 +43,25 @@ Features:
 - Timely notice before a contract ends, plus renewal with a loyalty bonus
 - Info-system messages on payout, expiry and renewal
 - Animal-welfare requirements (herd health) at the premium dairies
-- Support for cow AND goat milk (goat milk via pallet pickup)
-- Cow/goat switch in the menu; one contract per milk type at a time
+- Support for cow, goat AND buffalo milk (tank or pallet pickup)
+- Cow/goat/buffalo switch in the menu; one contract per milk type at a time
 - Shortfall penalty on unmet minimum quotas (shown up front at signing)
 - Early cancellation possible - for a termination fee, with a confirmation prompt
-- Saveable and multiplayer-ready (server-authoritative)]]></en>
+- Saveable and multiplayer-ready (server-authoritative)
+
+Changelog:
+0.4.0.0
+- Buffalo milk as a third milk type (12 dairies, tank pickup)
+- Selector now cow / goat / buffalo; up to three contracts in parallel
+- Dynamic quotas and requirements (per-dairy variance)
+0.3.0.0
+- Goat milk (pallet pickup) and 12 goat dairies
+- Separate contract per milk type; in-menu selector
+- Shortfall penalty, carry-over on renewal, early cancellation
+- Help pages in the game's help menu
+0.2.0.0
+- First version: milk contract system for cows
+]]></en>
         <de><![CDATA[Habt ihr euch schon mal gefragt, was eigentlich mit der ganzen Milch passiert, die eure Kühe Tag für Tag geben? Ganz normal wandert sie zum Tagespreis über die Verkaufsstelle - mal gibt es mehr Geld dafür, mal weniger. Aber es geht auch anders. Und wie das funktioniert, das schauen wir uns jetzt einmal ganz in Ruhe an.
 
 Stellt euch vor, ihr geht zu einer Molkerei und schließt einen richtigen Vertrag ab. Ihr sagt: "Ich liefere euch meine Milch", und die Molkerei sagt: "Gut, dafür bekommst du von uns einen festen Preis." Und weil es viele verschiedene Molkereien gibt, hat auch jede ihre eigenen Vorstellungen. Die eine zahlt jeden Monat, die andere nur einmal im Jahr - dafür aber ordentlich. Die eine nimmt einfach alles, was ihr habt. Die nächste möchte eine Mindestmenge. Und die feine Bio-Molkerei? Die zahlt am meisten, schaut aber ganz genau hin, ob es euren Kühen auch wirklich gut geht.
@@ -56,7 +70,7 @@ Und jetzt kommt das Schöne: Habt ihr einmal unterschrieben, dann holt die Molke
 
 Aber wisst ihr, was besonders clever ist? Die Angebote wechseln. Jedes Jahr liegen andere Molkereien auf dem Tisch, mal mit kurzer, mal mit langer Laufzeit. Und je länger ihr euch bindet, desto besser wird der Preis. Läuft euer Vertrag bald aus, bekommt ihr rechtzeitig Bescheid - und dürft zu euren alten Konditionen verlängern, mit einem kleinen Treuebonus obendrauf. Ganz schön praktisch, oder?
 
-Und nicht nur Kühe: Auch für Ziegenmilch gibt es eigene Verträge mit eigenen Molkereien. Ziegenmilch kommt ja als Palette aus dem Stall - die Molkerei holt sie genauso automatisch ab. Im Menü schaltet ihr oben einfach zwischen Kuh und Ziege um und könnt sogar von beidem gleichzeitig einen Vertrag laufen haben. Aber Vorsicht: Ein Vertrag ist ein Vertrag. Wer eine Mindestmenge zusagt und am Ende nicht liefert, zahlt für die Fehlmenge eine Strafe - und die steht schon beim Abschluss klar dabei. Und wenn ihr wirklich einmal vorzeitig aussteigen wollt? Das geht, kostet aber eine Ablöse. Bevor es soweit ist, fragt euch das Spiel aber noch einmal ganz genau, ob ihr das auch wirklich wollt.
+Und nicht nur Kühe: Auch für Ziegenmilch gibt es eine ganze eigene Auswahl an Molkereien - von der Seifenmanufaktur über die Feinkäserei bis zur Naturkosmetik. Ziegenmilch kommt ja als Palette aus dem Stall - die Molkerei holt sie genauso automatisch ab. Im Menü schaltet ihr oben einfach zwischen Kuh und Ziege um und könnt sogar von beidem gleichzeitig einen Vertrag laufen haben. Und es bleibt nicht bei zwei Sorten: Auch Büffelmilch hat ihre eigenen Molkereien - von der Mozzarella-Manufaktur bis zur Delikatess-Molkerei. Büffelmilch kommt wie Kuhmilch aus dem Tank. Im Menü blättert ihr oben zwischen Kuh, Ziege und Büffel - und könnt von jeder Sorte gleichzeitig einen Vertrag haben. Aber Vorsicht: Ein Vertrag ist ein Vertrag. Wer eine Mindestmenge zusagt und am Ende nicht liefert, zahlt für die Fehlmenge eine Strafe - und die steht schon beim Abschluss klar dabei. Und wenn ihr wirklich einmal vorzeitig aussteigen wollt? Das geht, kostet aber eine Ablöse. Bevor es soweit ist, fragt euch das Spiel aber noch einmal ganz genau, ob ihr das auch wirklich wollt.
 
 So wird aus dem simplen Milchverkauf ein richtiges kleines Geschäft, bei dem ihr entscheidet: schnell und flexibel, oder lieber lang und lohnend?
 
@@ -69,11 +83,25 @@ Funktionen:
 - Rechtzeitige Info vor Vertragsende und Verlängern mit Treuebonus
 - Meldungen im Info-System bei Auszahlung, Ablauf und Verlängerung
 - Tierwohl-Auflagen (Herdengesundheit) bei den Premium-Molkereien
-- Unterstützung für Kuh- UND Ziegenmilch (Ziegenmilch per Paletten-Abnahme)
-- Umschalter Kuh/Ziege im Menü; je ein Vertrag pro Milchtyp gleichzeitig
+- Unterstützung für Kuh-, Ziegen- UND Büffelmilch (Tank bzw. Paletten-Abnahme)
+- Umschalter Kuh/Ziege/Büffel im Menü; je ein Vertrag pro Milchtyp gleichzeitig
 - Vertragsstrafe bei Fehlmenge (transparent schon beim Abschluss angezeigt)
 - Vorzeitige Kündigung möglich - gegen Ablöse und mit Sicherheitsabfrage
-- Speicherbar und mehrspieler-tauglich (Server-autoritativ)]]></de>
+- Speicherbar und mehrspieler-tauglich (Server-autoritativ)
+
+Changelog:
+0.4.0.0
+- Büffelmilch als dritter Milchtyp (12 Molkereien, Tank-Abnahme)
+- Umschalter jetzt Kuh / Ziege / Büffel; drei Verträge parallel möglich
+- Dynamische Quoten und Auflagen (Schwankung je Molkerei)
+0.3.0.0
+- Ziegenmilch (Paletten-Abnahme) und 12 Ziegen-Molkereien
+- Verträge pro Milchtyp getrennt; Umschalter im Menü
+- Strafe bei Fehlmenge, Nachliefern beim Verlängern, vorzeitige Kündigung
+- Hilfe-Seiten im Spiel-Hilfemenü
+0.2.0.0
+- Erste Version: Milch-Vertragssystem für Kühe
+]]></de>
     </description>
 
     <iconFilename>icon_MilkContract.dds</iconFilename>
@@ -88,5 +116,60 @@ Funktionen:
         <sourceFile filename="scripts/MilkContract.lua"/>
         <sourceFile filename="scripts/MilkContractManager.lua"/>
     </extraSourceFiles>
+
+    <helpLines>
+        <category title="$l10n_mc_help_title">
+            <page title="$l10n_mc_help_p1_title">
+                <paragraph>
+                    <text text="$l10n_mc_help_p1_text" />
+                </paragraph>
+            </page>
+            <page title="$l10n_mc_help_p2_title">
+                <paragraph>
+                    <text text="$l10n_mc_help_p2_text" />
+                </paragraph>
+            </page>
+            <page title="$l10n_mc_help_p3_title">
+                <paragraph>
+                    <text text="$l10n_mc_help_p3_text" />
+                </paragraph>
+            </page>
+            <page title="$l10n_mc_help_p4_title">
+                <paragraph>
+                    <text text="$l10n_mc_help_p4_text" />
+                </paragraph>
+            </page>
+            <page title="$l10n_mc_help_p5_title">
+                <paragraph>
+                    <text text="$l10n_mc_help_p5_text" />
+                </paragraph>
+            </page>
+            <page title="$l10n_mc_help_p6_title">
+                <paragraph>
+                    <text text="$l10n_mc_help_p6_text" />
+                </paragraph>
+            </page>
+            <page title="$l10n_mc_help_p7_title">
+                <paragraph>
+                    <text text="$l10n_mc_help_p7_text" />
+                </paragraph>
+            </page>
+            <page title="$l10n_mc_help_p8_title">
+                <paragraph>
+                    <text text="$l10n_mc_help_p8_text" />
+                </paragraph>
+            </page>
+            <page title="$l10n_mc_help_p9_title">
+                <paragraph>
+                    <text text="$l10n_mc_help_p9_text" />
+                </paragraph>
+            </page>
+            <page title="$l10n_mc_help_p10_title">
+                <paragraph>
+                    <text text="$l10n_mc_help_p10_text" />
+                </paragraph>
+            </page>
+        </category>
+    </helpLines>
 
 </modDesc>

@@ -84,16 +84,16 @@ function MilkContractTest.stalls(self)
     if m == nil then p("Manager nicht bereit."); return end
     local farmId = myFarm()
 
-    for _, ft in ipairs({ FT_COW, FT_GOAT }) do
-        local list = m:getProducers(farmId, ft)
-        local kinds = {}
-        for _, e in ipairs(list) do kinds[e.kind] = (kinds[e.kind] or 0) + 1 end
-        p("== %s ==  Staelle: %d  (Tank %d / Paletten %d)",
-            ft, #list, kinds["milk"] or 0, kinds["pallets"] or 0)
+    local list = m:listMilkStalls(farmId)
+    local any = false
+    for name, r in pairs(list) do
+        any = true
+        p("== %s ==  Staelle: %d  (Tank %d / Paletten %d)", name, r.count, r.tank, r.pallets)
         p("   Tagesmenge ~ %.0f l | Lager aktuell %.0f l | Marktpreis %.3f",
-            m:estimateDailyMilk(farmId, ft),
-            m:getStoredMilk(farmId, ft),
-            m:getCurrentMilkMarketPrice(ft))
+            r.daily, r.stored, m:getCurrentMilkMarketPrice(name))
+    end
+    if not any then
+        p("Keine milchgebenden Staelle auf Farm %d gefunden.", farmId)
     end
 end
 

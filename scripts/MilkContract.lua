@@ -28,6 +28,9 @@ function MilkContract.new(dairy, farmId, targetLiters, capPerPeriod)
     self.periodsElapsed = 0                     -- vergangene Monate seit Abschluss
     self.priceBonus     = 1.0                   -- Aufschlag fuer laengere Laufzeit
     self.carriedDebt    = 0                      -- aus Vorjahr uebernommene Nachliefermenge
+    self.effQuotaPercent = nil                   -- gewuerfelte Mindestmenge (%) - fixiert
+    self.effHealth      = nil                    -- gewuerfelte Gesundheitsauflage (%) - fixiert
+    self.effCalf        = nil                    -- gewuerfelte Kaelber-Haltedauer (Monate) - fixiert
 
     -- laufende Zaehler
     self.deliveredThisPeriod = 0               -- an die Molkerei geliefert (Periode)
@@ -64,7 +67,7 @@ end
 
 -- Auflagen erfuellt? (Gesundheit; Kaelber-Regel prueft der Manager per Hook) -
 function MilkContract:meetsHealthRequirement()
-    local req = self.dairy.requirements.minHerdHealth
+    local req = self.effHealth or self.dairy.requirements.minHerdHealth
     if req == nil then return true end
     local avg = self:getAverageHealth()
     if avg == nil then return true end   -- noch kein Sample -> nicht bestrafen
@@ -161,6 +164,9 @@ function MilkContract:saveToXMLFile(xmlFile, key)
     xmlFile:setInt(key .. "#durationMonths",         self.durationMonths or 12)
     xmlFile:setFloat(key .. "#priceBonus",           self.priceBonus or 1)
     xmlFile:setFloat(key .. "#carriedDebt",          self.carriedDebt or 0)
+    if self.effQuotaPercent ~= nil then xmlFile:setFloat(key .. "#effQuotaPercent", self.effQuotaPercent) end
+    if self.effHealth       ~= nil then xmlFile:setFloat(key .. "#effHealth",       self.effHealth) end
+    if self.effCalf         ~= nil then xmlFile:setInt(key   .. "#effCalf",         self.effCalf) end
 end
 
 -- @param dairyById  Lookup aus MilkContractLoader.load().byId
@@ -190,5 +196,8 @@ function MilkContract.loadFromXMLFile(xmlFile, key, dairyById)
     if savedDuration ~= nil then c.durationMonths = savedDuration end
     c.priceBonus          = xmlFile:getFloat(key .. "#priceBonus") or 1
     c.carriedDebt         = xmlFile:getFloat(key .. "#carriedDebt") or 0
+    c.effQuotaPercent     = xmlFile:getFloat(key .. "#effQuotaPercent")
+    c.effHealth           = xmlFile:getFloat(key .. "#effHealth")
+    c.effCalf             = xmlFile:getInt(key   .. "#effCalf")
     return c
 end

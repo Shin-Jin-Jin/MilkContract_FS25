@@ -82,7 +82,7 @@
                title="$l10n_dairy_nordmilch_title"
                desc="$l10n_dairy_nordmilch_desc">
             <pricing type="fixed" pricePerLiter="1.05" />
-            <quota   type="minimum" percentOfEstimated="85" />
+            <quota   type="minimum" percentOfEstimated="85" percentVariance="10" />
             <payout  interval="halfyearly" />
             <duration months="12" />
             <penalty factor="1.5" />
@@ -103,7 +103,7 @@
                title="$l10n_dairy_bioland_title"
                desc="$l10n_dairy_bioland_desc">
             <pricing type="fixed" pricePerLiter="1.55" />
-            <quota   type="minimum" percentOfEstimated="60" />
+            <quota   type="minimum" percentOfEstimated="60" percentVariance="12" />
             <payout  interval="yearly" />
             <duration months="24" />
             <penalty factor="1.5" />
@@ -117,13 +117,13 @@
                title="$l10n_dairy_weidehof_title"
                desc="$l10n_dairy_weidehof_desc">
             <pricing type="fixed" pricePerLiter="1.84" />
-            <quota   type="minimum" percentOfEstimated="50" />
+            <quota   type="minimum" percentOfEstimated="50" percentVariance="10" />
             <payout  interval="yearly" />
             <duration months="24" />
             <penalty factor="1.5" />
             <requirements>
-                <minHerdHealth percent="85" />
-                <minCalfAge months="12" />
+                <minHerdHealth percent="85" variance="5" />
+                <minCalfAge months="12" variance="3" />
             </requirements>
         </dairy>
 
@@ -132,7 +132,7 @@
                title="$l10n_dairy_klein_title"
                desc="$l10n_dairy_klein_desc">
             <pricing type="fixed" pricePerLiter="1.90" />
-            <quota   type="maximum" litersPerMonth="4000" />
+            <quota   type="maximum" litersPerMonth="4000" litersVariance="800" />
             <payout  interval="monthly" />
             <duration months="12" />
         </dairy>
@@ -150,7 +150,7 @@
                title="$l10n_dairy_frischlogistik_title"
                desc="$l10n_dairy_frischlogistik_desc">
             <pricing type="fixed" pricePerLiter="1.10" />
-            <quota   type="minimum" percentOfEstimated="70" />
+            <quota   type="minimum" percentOfEstimated="70" percentVariance="15" />
             <payout  interval="monthly" />
             <duration months="12" />
             <penalty factor="1.5" />
@@ -160,7 +160,7 @@
                title="$l10n_dairy_kaesewerk_title"
                desc="$l10n_dairy_kaesewerk_desc">
             <pricing type="fixed" pricePerLiter="1.45" />
-            <quota   type="minimum" percentOfEstimated="55" />
+            <quota   type="minimum" percentOfEstimated="55" percentVariance="10" />
             <payout  interval="halfyearly" />
             <duration months="18" />
             <penalty factor="1.5" />
@@ -188,13 +188,13 @@
                title="$l10n_dairy_demeter_title"
                desc="$l10n_dairy_demeter_desc">
             <pricing type="fixed" pricePerLiter="1.95" />
-            <quota   type="minimum" percentOfEstimated="45" />
+            <quota   type="minimum" percentOfEstimated="45" percentVariance="8" />
             <payout  interval="yearly" />
             <duration months="24" />
             <penalty factor="1.5" />
             <requirements>
-                <minHerdHealth percent="90" />
-                <minCalfAge months="15" />
+                <minHerdHealth percent="90" variance="4" />
+                <minCalfAge months="15" variance="3" />
             </requirements>
         </dairy>
 
@@ -212,7 +212,7 @@
                title="$l10n_dairy_ziegenkaeserei_title"
                desc="$l10n_dairy_ziegenkaeserei_desc">
             <pricing type="market" marketMultiplier="1.20" />
-            <quota   type="minimum" percentOfEstimated="60" />
+            <quota   type="minimum" percentOfEstimated="60" percentVariance="12" />
             <payout  interval="halfyearly" />
             <duration months="18" />
             <penalty factor="1.5" />
@@ -222,13 +222,239 @@
                title="$l10n_dairy_ziegen_biohof_title"
                desc="$l10n_dairy_ziegen_biohof_desc">
             <pricing type="market" marketMultiplier="1.35" />
-            <quota   type="minimum" percentOfEstimated="50" />
+            <quota   type="minimum" percentOfEstimated="50" percentVariance="10" />
             <payout  interval="yearly" />
             <duration months="24" />
             <penalty factor="1.5" />
             <requirements>
-                <minHerdHealth percent="85" />
+                <minHerdHealth percent="85" variance="5" />
             </requirements>
+        </dairy>
+
+
+        <dairy id="ziegen_seiferei" milkType="goat"
+               title="$l10n_dairy_ziegen_seiferei_title"
+               desc="$l10n_dairy_ziegen_seiferei_desc">
+            <pricing type="market" marketMultiplier="1.15" />
+            <quota   type="minimum" percentOfEstimated="55" />
+            <payout  interval="quarterly" />
+            <duration months="12" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="ziegen_feinkaese" milkType="goat"
+               title="$l10n_dairy_ziegen_feinkaese_title"
+               desc="$l10n_dairy_ziegen_feinkaese_desc">
+            <pricing type="market" marketMultiplier="1.30" />
+            <quota   type="minimum" percentOfEstimated="65" percentVariance="12" />
+            <payout  interval="halfyearly" />
+            <duration months="18" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="ziegen_kosmetik" milkType="goat"
+               title="$l10n_dairy_ziegen_kosmetik_title"
+               desc="$l10n_dairy_ziegen_kosmetik_desc">
+            <pricing type="market" marketMultiplier="1.40" />
+            <quota   type="minimum" percentOfEstimated="50" percentVariance="10" />
+            <payout  interval="yearly" />
+            <duration months="12" />
+            <penalty factor="1.5" />
+            <requirements>
+                <minHerdHealth percent="80" variance="5" />
+            </requirements>
+        </dairy>
+
+        <dairy id="ziegen_hofladen" milkType="goat"
+               title="$l10n_dairy_ziegen_hofladen_title"
+               desc="$l10n_dairy_ziegen_hofladen_desc">
+            <pricing type="market" marketMultiplier="1.10" />
+            <quota   type="none" />
+            <payout  interval="monthly" />
+            <duration months="6" />
+        </dairy>
+
+        <dairy id="ziegen_regional" milkType="goat"
+               title="$l10n_dairy_ziegen_regional_title"
+               desc="$l10n_dairy_ziegen_regional_desc">
+            <pricing type="market" marketMultiplier="1.08" />
+            <quota   type="minimum" percentOfEstimated="70" />
+            <payout  interval="monthly" />
+            <duration months="12" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="ziegen_export" milkType="goat"
+               title="$l10n_dairy_ziegen_export_title"
+               desc="$l10n_dairy_ziegen_export_desc">
+            <pricing type="market" marketMultiplier="1.28" />
+            <quota   type="none" />
+            <payout  interval="quarterly" />
+            <duration months="12" />
+        </dairy>
+
+        <dairy id="ziegen_frischkaese" milkType="goat"
+               title="$l10n_dairy_ziegen_frischkaese_title"
+               desc="$l10n_dairy_ziegen_frischkaese_desc">
+            <pricing type="market" marketMultiplier="1.18" />
+            <quota   type="minimum" percentOfEstimated="60" />
+            <payout  interval="monthly" />
+            <duration months="12" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="ziegen_demeter" milkType="goat"
+               title="$l10n_dairy_ziegen_demeter_title"
+               desc="$l10n_dairy_ziegen_demeter_desc">
+            <pricing type="market" marketMultiplier="1.45" />
+            <quota   type="minimum" percentOfEstimated="45" percentVariance="8" />
+            <payout  interval="yearly" />
+            <duration months="24" />
+            <penalty factor="1.5" />
+            <requirements>
+                <minHerdHealth percent="90" variance="4" />
+            </requirements>
+        </dairy>
+
+        <dairy id="ziegen_gourmet" milkType="goat"
+               title="$l10n_dairy_ziegen_gourmet_title"
+               desc="$l10n_dairy_ziegen_gourmet_desc">
+            <pricing type="market" marketMultiplier="1.50" />
+            <quota   type="minimum" percentOfEstimated="40" percentVariance="10" />
+            <payout  interval="halfyearly" />
+            <duration months="18" />
+            <penalty factor="1.5" />
+            <requirements>
+                <minHerdHealth percent="85" variance="5" />
+            </requirements>
+        </dairy>
+
+
+        <!-- ===================== BUEFFELMILCH ===================== -->
+        <dairy id="bueffelhof" milkType="buffalo"
+               title="$l10n_dairy_bueffelhof_title"
+               desc="$l10n_dairy_bueffelhof_desc">
+            <pricing type="market" marketMultiplier="1.05" />
+            <quota   type="none" />
+            <payout  interval="monthly" />
+            <duration months="6" />
+        </dairy>
+
+        <dairy id="bueffel_mozzarella" milkType="buffalo"
+               title="$l10n_dairy_bueffel_mozzarella_title"
+               desc="$l10n_dairy_bueffel_mozzarella_desc">
+            <pricing type="market" marketMultiplier="1.30" />
+            <quota   type="minimum" percentOfEstimated="60" percentVariance="12" />
+            <payout  interval="halfyearly" />
+            <duration months="18" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="bueffel_feinkaese" milkType="buffalo"
+               title="$l10n_dairy_bueffel_feinkaese_title"
+               desc="$l10n_dairy_bueffel_feinkaese_desc">
+            <pricing type="market" marketMultiplier="1.35" />
+            <quota   type="minimum" percentOfEstimated="65" percentVariance="10" />
+            <payout  interval="halfyearly" />
+            <duration months="18" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="bueffel_delikatess" milkType="buffalo"
+               title="$l10n_dairy_bueffel_delikatess_title"
+               desc="$l10n_dairy_bueffel_delikatess_desc">
+            <pricing type="market" marketMultiplier="1.45" />
+            <quota   type="minimum" percentOfEstimated="50" percentVariance="10" />
+            <payout  interval="yearly" />
+            <duration months="24" />
+            <penalty factor="1.5" />
+            <requirements>
+                <minHerdHealth percent="85" variance="5" />
+            </requirements>
+        </dairy>
+
+        <dairy id="bueffel_hofladen" milkType="buffalo"
+               title="$l10n_dairy_bueffel_hofladen_title"
+               desc="$l10n_dairy_bueffel_hofladen_desc">
+            <pricing type="market" marketMultiplier="1.10" />
+            <quota   type="none" />
+            <payout  interval="monthly" />
+            <duration months="6" />
+        </dairy>
+
+        <dairy id="bueffel_regional" milkType="buffalo"
+               title="$l10n_dairy_bueffel_regional_title"
+               desc="$l10n_dairy_bueffel_regional_desc">
+            <pricing type="market" marketMultiplier="1.08" />
+            <quota   type="minimum" percentOfEstimated="70" percentVariance="10" />
+            <payout  interval="monthly" />
+            <duration months="12" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="bueffel_export" milkType="buffalo"
+               title="$l10n_dairy_bueffel_export_title"
+               desc="$l10n_dairy_bueffel_export_desc">
+            <pricing type="market" marketMultiplier="1.30" />
+            <quota   type="none" />
+            <payout  interval="quarterly" />
+            <duration months="12" />
+        </dairy>
+
+        <dairy id="bueffel_ricotta" milkType="buffalo"
+               title="$l10n_dairy_bueffel_ricotta_title"
+               desc="$l10n_dairy_bueffel_ricotta_desc">
+            <pricing type="market" marketMultiplier="1.18" />
+            <quota   type="minimum" percentOfEstimated="55" percentVariance="12" />
+            <payout  interval="monthly" />
+            <duration months="12" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="bueffel_gelateria" milkType="buffalo"
+               title="$l10n_dairy_bueffel_gelateria_title"
+               desc="$l10n_dairy_bueffel_gelateria_desc">
+            <pricing type="market" marketMultiplier="1.40" />
+            <quota   type="minimum" percentOfEstimated="50" percentVariance="10" />
+            <payout  interval="quarterly" />
+            <duration months="12" />
+            <penalty factor="1.5" />
+        </dairy>
+
+        <dairy id="bueffel_bio" milkType="buffalo"
+               title="$l10n_dairy_bueffel_bio_title"
+               desc="$l10n_dairy_bueffel_bio_desc">
+            <pricing type="market" marketMultiplier="1.45" />
+            <quota   type="minimum" percentOfEstimated="45" percentVariance="8" />
+            <payout  interval="yearly" />
+            <duration months="24" />
+            <penalty factor="1.5" />
+            <requirements>
+                <minHerdHealth percent="90" variance="4" />
+            </requirements>
+        </dairy>
+
+        <dairy id="bueffel_gourmet" milkType="buffalo"
+               title="$l10n_dairy_bueffel_gourmet_title"
+               desc="$l10n_dairy_bueffel_gourmet_desc">
+            <pricing type="market" marketMultiplier="1.50" />
+            <quota   type="minimum" percentOfEstimated="40" percentVariance="10" />
+            <payout  interval="halfyearly" />
+            <duration months="18" />
+            <penalty factor="1.5" />
+            <requirements>
+                <minHerdHealth percent="85" variance="5" />
+            </requirements>
+        </dairy>
+
+        <dairy id="bueffel_kaeserei_sued" milkType="buffalo"
+               title="$l10n_dairy_bueffel_kaeserei_sued_title"
+               desc="$l10n_dairy_bueffel_kaeserei_sued_desc">
+            <pricing type="market" marketMultiplier="1.22" />
+            <quota   type="minimum" percentOfEstimated="60" percentVariance="12" />
+            <payout  interval="halfyearly" />
+            <duration months="18" />
+            <penalty factor="1.5" />
         </dairy>
 
     </dairies>

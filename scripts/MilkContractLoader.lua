@@ -23,7 +23,7 @@ function MilkContractLoader.registerSchema()
     schema:register(XMLValueType.STRING, key .. "#id",    "Interner Schluessel")
     schema:register(XMLValueType.STRING, key .. "#title", "l10n-Key Anzeige")
     schema:register(XMLValueType.STRING, key .. "#desc",  "l10n-Key Beschreibung")
-    schema:register(XMLValueType.STRING, key .. "#milkType", "cow|goat", "cow")
+    schema:register(XMLValueType.STRING, key .. "#milkType", "cow|goat|buffalo", "cow")
     schema:register(XMLValueType.STRING, key .. "#fillType", "FillType-Name (optional)")
 
     schema:register(XMLValueType.STRING, key .. ".pricing#type", "market|fixed")
@@ -32,14 +32,18 @@ function MilkContractLoader.registerSchema()
 
     schema:register(XMLValueType.STRING, key .. ".quota#type", "none|minimum|maximum")
     schema:register(XMLValueType.FLOAT,  key .. ".quota#percentOfEstimated", "")
+    schema:register(XMLValueType.FLOAT,  key .. ".quota#percentVariance", "+/- Prozentpunkte (dynamisch)", 0)
     schema:register(XMLValueType.FLOAT,  key .. ".quota#litersPerMonth", "")
+    schema:register(XMLValueType.FLOAT,  key .. ".quota#litersVariance", "+/- Liter (dynamisch)", 0)
 
     schema:register(XMLValueType.STRING, key .. ".payout#interval", "monthly|quarterly|halfyearly|yearly", "monthly")
     schema:register(XMLValueType.INT,    key .. ".duration#months", "Vertragslaufzeit in Monaten", 12)
     schema:register(XMLValueType.FLOAT,  key .. ".penalty#factor", "")
 
     schema:register(XMLValueType.FLOAT, key .. ".requirements.minHerdHealth#percent", "")
+    schema:register(XMLValueType.FLOAT, key .. ".requirements.minHerdHealth#variance", "+/- Prozentpunkte (dynamisch)", 0)
     schema:register(XMLValueType.INT,   key .. ".requirements.minCalfAge#months", "")
+    schema:register(XMLValueType.INT,   key .. ".requirements.minCalfAge#variance", "+/- Monate (dynamisch)", 0)
 
     MilkContractLoader.schema = schema
 end
@@ -66,7 +70,9 @@ local function loadDairy(xmlFile, key)
     d.title = xmlFile:getValue(key .. "#title")
     d.milkType = xmlFile:getValue(key .. "#milkType", "cow")
     -- FillType je Milchtyp (per Attribut ueberschreibbar, falls Namen abweichen)
-    local defaultFill = (d.milkType == "goat") and "GOATMILK" or "MILK"
+    local defaultFill = "MILK"
+    if d.milkType == "goat" then defaultFill = "GOATMILK"
+    elseif d.milkType == "buffalo" then defaultFill = "BUFFALOMILK" end
     d.fillTypeName = xmlFile:getValue(key .. "#fillType", defaultFill)
     d.desc  = xmlFile:getValue(key .. "#desc")
 
@@ -80,16 +86,20 @@ local function loadDairy(xmlFile, key)
     d.quota.type = xmlFile:getValue(key .. ".quota#type", "none")
     if d.quota.type == "minimum" then
         d.quota.percentOfEstimated = xmlFile:getValue(key .. ".quota#percentOfEstimated")
+        d.quota.percentVariance    = xmlFile:getValue(key .. ".quota#percentVariance", 0)
     elseif d.quota.type == "maximum" then
         d.quota.litersPerMonth = xmlFile:getValue(key .. ".quota#litersPerMonth")
+        d.quota.litersVariance = xmlFile:getValue(key .. ".quota#litersVariance", 0)
     end
 
     d.payout = xmlFile:getValue(key .. ".payout#interval", "monthly")
     d.durationMonths = xmlFile:getValue(key .. ".duration#months", 12)
     d.penaltyFactor = xmlFile:getValue(key .. ".penalty#factor")
 
-    d.requirements.minHerdHealth    = xmlFile:getValue(key .. ".requirements.minHerdHealth#percent")
-    d.requirements.minCalfAgeMonths = xmlFile:getValue(key .. ".requirements.minCalfAge#months")
+    d.requirements.minHerdHealth         = xmlFile:getValue(key .. ".requirements.minHerdHealth#percent")
+    d.requirements.minHerdHealthVariance = xmlFile:getValue(key .. ".requirements.minHerdHealth#variance", 0)
+    d.requirements.minCalfAgeMonths      = xmlFile:getValue(key .. ".requirements.minCalfAge#months")
+    d.requirements.minCalfAgeVariance    = xmlFile:getValue(key .. ".requirements.minCalfAge#variance", 0)
 
     return d
 end

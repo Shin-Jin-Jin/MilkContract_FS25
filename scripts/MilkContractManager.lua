@@ -80,12 +80,12 @@ local function makeSeededRandom(seed)
 end
 
 -- Basis-Molkerei je Milchtyp (immer im Angebot) und die bekannten Typen.
-MilkContractManager.BASE_BY_TYPE = { cow = "cooperative", goat = "ziegenhof" }
-MilkContractManager.MILK_TYPES   = { "cow", "goat" }
+MilkContractManager.BASE_BY_TYPE = { cow = "cooperative", goat = "ziegenhof", buffalo = "bueffelhof" }
+MilkContractManager.MILK_TYPES   = { "cow", "goat", "buffalo" }
 
 -- Angebot je Milchtyp bauen: Basis + zufaellige Auswahl des passenden Typs.
 function MilkContractManager:rebuildOffer()
-    self.offerByType   = { cow = {}, goat = {} }
+    self.offerByType   = { cow = {}, goat = {}, buffalo = {} }
     self.offerDurations = {}
     if self.data == nil then return end
 
@@ -114,11 +114,74 @@ function MilkContractManager:rebuildOffer()
     end
 
     -- Laufzeiten fuer alle angebotenen Molkereien (deterministisch aus dem Seed)
+    self.offerQuota  = {}   -- [id] = Prozent (minimum) ODER Liter (maximum)
+    self.offerHealth = {}   -- [id] = Prozent oder nil
+    self.offerCalf   = {}   -- [id] = Monate oder nil
     for _, mt in ipairs(MilkContractManager.MILK_TYPES) do
         for _, id in ipairs(self.offerByType[mt]) do
             self.offerDurations[id] = 3 + (rnd(22) - 1)   -- 3..24
+
+            local d = self.data.byId[id]
+            if d ~= nil then
+                -- Quote dynamisch (unabhaengig gewuerfelt, eigene Spanne je Molkerei)
+                if d.quota.type == "minimum" then
+                    local base = d.quota.percentOfEstimated or 0
+                    local v    = d.quota.percentVariance or 0
+                    self.offerQuota[id] = clampNum(base + rollDelta(rnd, v), 1, 100)
+                elseif d.quota.type == "maximum" then
+                    local base = d.quota.litersPerMonth or 0
+                    local v    = d.quota.litersVariance or 0
+                    self.offerQuota[id] = math.max(0, base + rollDelta(rnd, v))
+                end
+                -- Auflagen dynamisch
+                if d.requirements.minHerdHealth ~= nil then
+                    local base = d.requirements.minHerdHealth
+                    local v    = d.requirements.minHerdHealthVariance or 0
+                    self.offerHealth[id] = clampNum(base + rollDelta(rnd, v), 0, 100)
+                end
+                if d.requirements.minCalfAgeMonths ~= nil then
+                    local base = d.requirements.minCalfAgeMonths
+                    local v    = d.requirements.minCalfAgeVariance or 0
+                    self.offerCalf[id] = math.max(0, base + rollDelta(rnd, v))
+                end
+            end
         end
     end
+end
+
+-- Ganzzahliger Zufallsausschlag in [-v, +v] aus dem Seed-RNG.
+function rollDelta(rnd, v)
+    v = math.floor((v or 0) + 0.5)
+    if v <= 0 then return 0 end
+    return rnd(2 * v + 1) - 1 - v
+end
+
+function clampNum(x, lo, hi)
+    if x < lo then return lo end
+    if x > hi then return hi end
+    return x
+end
+
+-- Getter mit Fallback auf den Basiswert (falls nicht im Angebot oder ohne Varianz)
+function MilkContractManager:getOfferQuota(dairyId)
+    if self.offerQuota ~= nil and self.offerQuota[dairyId] ~= nil then return self.offerQuota[dairyId] end
+    local d = self.data ~= nil and self.data.byId[dairyId] or nil
+    if d == nil then return nil end
+    if d.quota.type == "minimum" then return d.quota.percentOfEstimated
+    elseif d.quota.type == "maximum" then return d.quota.litersPerMonth end
+    return nil
+end
+
+function MilkContractManager:getOfferHealth(dairyId)
+    if self.offerHealth ~= nil and self.offerHealth[dairyId] ~= nil then return self.offerHealth[dairyId] end
+    local d = self.data ~= nil and self.data.byId[dairyId] or nil
+    return d ~= nil and d.requirements.minHerdHealth or nil
+end
+
+function MilkContractManager:getOfferCalf(dairyId)
+    if self.offerCalf ~= nil and self.offerCalf[dairyId] ~= nil then return self.offerCalf[dairyId] end
+    local d = self.data ~= nil and self.data.byId[dairyId] or nil
+    return d ~= nil and d.requirements.minCalfAgeMonths or nil
 end
 
 -- Gewuerfelte Laufzeit einer angebotenen Molkerei (Fallback: feste Laufzeit).
@@ -208,12 +271,12 @@ function MilkContractManager:computeContractNumbers(dairy, farmId, months)
 
     if dairy:hasMinimumQuota() then
         local annual = self:estimateAnnualProduction(farmId, dairy.fillTypeName)
-        -- Ziel auf die (ggf. gewuerfelte) Vertragslaufzeit skalieren
         local years = (months or dairy.durationMonths or 12) / 12
-        target = annual * (dairy.quota.percentOfEstimated / 100) * years
+        local pct = self:getOfferQuota(dairy.id) or dairy.quota.percentOfEstimated or 0
+        target = annual * (pct / 100) * years
     elseif dairy:hasMaximumCap() then
-        -- litersPerMonth bezieht sich auf den Bezugsmonat -> auf Periode skalieren
-        cap = dairy.quota.litersPerMonth * self:getPeriodScale()
+        local cap0 = self:getOfferQuota(dairy.id) or dairy.quota.litersPerMonth or 0
+        cap = cap0 * self:getPeriodScale()
     end
 
     return target, cap
@@ -278,6 +341,10 @@ function MilkContractManager:doSign(dairyId, farmId)
     local c = MilkContract.new(dairy, farmId, target, cap)
     c.durationMonths = months
     c.priceBonus     = bonus
+    -- gewuerfelte (dynamische) Konditionen im Vertrag fixieren
+    c.effQuotaPercent = dairy:hasMinimumQuota() and self:getOfferQuota(dairyId) or nil
+    c.effHealth       = (dairy.requirements.minHerdHealth ~= nil) and self:getOfferHealth(dairyId) or nil
+    c.effCalf         = (dairy.requirements.minCalfAgeMonths ~= nil) and self:getOfferCalf(dairyId) or nil
     self:setContract(farmId, milkType, c)
     Logging.info("[MilkContract] Farm %d: Vertrag mit '%s' [%s] (%d Monate, Ziel %.0f l, Bonus x%.2f)",
         farmId, dairyId, milkType, months, target, bonus)
@@ -812,6 +879,41 @@ function MilkContractManager:estimateDailyMilk(farmId, fillTypeName)
         end
     end
     return total
+end
+
+-- Listet ALLE milchgebenden Staelle nach echtem Fuelltypnamen (fuer Diagnose).
+function MilkContractManager:listMilkStalls(farmId)
+    local function ftName(ft)
+        if g_fillTypeManager == nil then return tostring(ft) end
+        if g_fillTypeManager.getFillTypeNameByIndex ~= nil then
+            local n = g_fillTypeManager:getFillTypeNameByIndex(ft)
+            if n ~= nil then return n end
+        end
+        local o = g_fillTypeManager.getFillTypeByIndex ~= nil and g_fillTypeManager:getFillTypeByIndex(ft) or nil
+        if o ~= nil then return o.name or o.title or tostring(ft) end
+        return tostring(ft)
+    end
+
+    local byFt = {}
+    for _, e in ipairs(self:getProducers(farmId, nil)) do
+        local spec = e.spec
+        local indices = (e.kind == "milk") and getMilkFillTypeIndices(spec) or (spec.fillTypes or {})
+        for _, ft in ipairs(indices) do
+            local name = ftName(ft)
+            local rec = byFt[name]
+            if rec == nil then rec = { name = name, count = 0, tank = 0, pallets = 0, daily = 0, stored = 0 }; byFt[name] = rec end
+            rec.count = rec.count + 1
+            if e.kind == "milk" then rec.tank = rec.tank + 1 else rec.pallets = rec.pallets + 1 end
+            rec.daily = rec.daily + ((spec.litersPerHour ~= nil and spec.litersPerHour[ft]) or 0) * 24
+            if e.kind == "milk" then
+                rec.stored = rec.stored + (e.placeable:getHusbandryFillLevel(ft) or 0)
+            else
+                rec.stored = rec.stored + ((spec.fillLevels ~= nil and spec.fillLevels[ft]) or 0)
+                                        + ((spec.pendingLiters ~= nil and spec.pendingLiters[ft]) or 0)
+            end
+        end
+    end
+    return byFt
 end
 
 -- Aktuell im Stall-Lager vorhandene Milch eines Fuelltyps (fuer Test/Anzeige).

@@ -99,5 +99,69 @@
         <text name="mc_extendConfirm" text="Vertrag mit %s verlängern?\nGleiche Konditionen plus Treuebonus."/>
         <text name="mc_extendConfirmDebt" text="Vertrag mit %s verlängern?\nOffene Fehlmenge von %s l wird als Nachlieferung übernommen (statt Strafe)."/>
         <text name="mc_notifyEndedPenalty" text="Milchvertrag mit %s nicht erfüllt - Strafe von %s fällig"/>
+        <text name="dairy_ziegen_seiferei_title" text="Ziegenmilch-Seifenmanufaktur"/>
+        <text name="dairy_ziegen_seiferei_desc" text="Handgemachte Seifen: solider Aufschlag, quartalsweise, mittlere Bindung."/>
+        <text name="dairy_ziegen_feinkaese_title" text="Feinkäserei Alpengold"/>
+        <text name="dairy_ziegen_feinkaese_desc" text="Edle Ziegenkäse: hoher Aufschlag, dafür hohe Quote und längere Bindung."/>
+        <text name="dairy_ziegen_kosmetik_title" text="NaturKosmetik Ziegenmilch"/>
+        <text name="dairy_ziegen_kosmetik_desc" text="Kosmetik-Manufaktur: Spitzenaufschlag, jährliche Zahlung, Tierwohl-Auflage."/>
+        <text name="dairy_ziegen_hofladen_title" text="Ziegen-Hofladen"/>
+        <text name="dairy_ziegen_hofladen_desc" text="Ab-Hof-Verkauf: flexibel, monatlich, kurze Bindung, keine Auflagen."/>
+        <text name="dairy_ziegen_regional_title" text="Regionalmolkerei Ziege"/>
+        <text name="dairy_ziegen_regional_desc" text="Regionaler Großabnehmer: kleiner Aufschlag, dafür hohe Quote, monatlich."/>
+        <text name="dairy_ziegen_export_title" text="Ziegenmilch-Export"/>
+        <text name="dairy_ziegen_export_desc" text="Stark marktgekoppelt: hohe Chance, hohes Risiko, keine Quote."/>
+        <text name="dairy_ziegen_frischkaese_title" text="Frischkäserei am Hang"/>
+        <text name="dairy_ziegen_frischkaese_desc" text="Frischkäse: guter Aufschlag, monatliche Zahlung, mittlere Quote."/>
+        <text name="dairy_ziegen_demeter_title" text="Demeter-Ziegenhof"/>
+        <text name="dairy_ziegen_demeter_desc" text="Premium-Bio: Spitzenaufschlag, lange Bindung, strenge Tierwohl-Auflage."/>
+        <text name="dairy_ziegen_gourmet_title" text="Gourmet-Feinkost Ziege"/>
+        <text name="dairy_ziegen_gourmet_desc" text="Feinkost-Manufaktur: höchster Aufschlag, Tierwohl-Auflage, mittlere Bindung."/>
+        <text name="mc_help_title" text="Milchvertrag"/>
+        <text name="mc_help_p1_title" text="Was ist ein Milchvertrag?"/>
+        <text name="mc_help_p1_text" text="Statt deine Milch zum schwankenden Tagespreis an der Verkaufsstelle abzugeben, schließt du mit einer Molkerei einen festen Vertrag. Solange er läuft, nimmt die Molkerei die vereinbarte Milch jeden Tag automatisch aus deinem Stall ab und bezahlt sie zum Vertragspreis. Jede Molkerei hat ihren eigenen Charakter: Preis, Mengenregel, Auszahlungsrhythmus, Laufzeit und teils Tierwohl-Auflagen. Das Vertragsmenue erreichst du über den eigenen Reiter im Spiel-Menü."/>
+        <text name="mc_help_p2_title" text="Kuh, Ziege und Büffel"/>
+        <text name="mc_help_p2_text" text="Die Mod unterstützt Kuhmilch, Ziegenmilch und Büffelmilch. Oben im Menü schaltest du mit den Pfeilen zwischen den Sorten um; Liste, Status und Knöpfe beziehen sich dann auf die gewählte Sorte. Von jeder Sorte kann gleichzeitig ein Vertrag laufen - du kannst also parallel einen Kuh-, einen Ziegen- und einen Büffelvertrag haben. Jede Sorte hat ihr eigenes Angebot an Molkereien."/>
+        <text name="mc_help_p3_title" text="Abnahme der Milch"/>
+        <text name="mc_help_p3_text" text="Laeuft ein Vertrag, wird die Milch automatisch jeden Tag aus dem Stall abgenommen: bei Kühen aus dem Tank, bei Ziegen aus den erzeugten Paletten. Du musst nichts selbst zur Molkerei fahren. Was die Molkerei nicht abnimmt - etwa über einer Höchstmenge - bleibt im Lager und kann weiterhin selbst verkauft werden. Ohne laufenden Vertrag verkaufst du wie gewohnt selbst."/>
+        <text name="mc_help_p4_title" text="Preis und Laufzeit"/>
+        <text name="mc_help_p4_text" text="Der Preis ist entweder fest pro Liter oder marktgekoppelt (Tagespreis mal einem Faktor, schwankt also mit dem Markt). Jedes Angebot hat zudem eine zufällige Laufzeit zwischen 3 und 24 Monaten. Je länger die Laufzeit, desto hoeher der Preisbonus - lange Bindung lohnt sich. Laufzeit und Bonuspreis werden beim Abschluss fixiert und gelten dann für den ganzen Vertrag."/>
+        <text name="mc_help_p5_title" text="Auszahlung"/>
+        <text name="mc_help_p5_text" text="Das Geld sammelt sich an und wird im vereinbarten Rhythmus ausgezahlt: monatlich, quartalsweise, halbjährlich oder jährlich. Der Rhythmus zählt ab Vertragsbeginn, nicht ab Kalenderjahr. Am Vertragsende wird immer der offene Rest ausgezahlt. Eine kurze Meldung informiert dich jeweils über die Auszahlung."/>
+        <text name="mc_help_p6_title" text="Angebote"/>
+        <text name="mc_help_p6_text" text="Es sind nie alle Molkereien gleichzeitig verfügbar. Das Angebot besteht aus einer festen Basis-Molkerei plus einer zufälligen Auswahl (vier bis fuenf gesamt) - getrennt für Kuh und Ziege. Einmal im Jahr wird das Angebot neu zusammengestellt. Ein Vertrag, den du gerade laufen hast, bleibt im Menü sichtbar, auch wenn seine Molkerei aktuell nicht im Angebot ist."/>
+        <text name="mc_help_p7_title" text="Mengen und Auflagen"/>
+        <text name="mc_help_p7_text" text="Die Mengenregel legt fest, wie viel abgenommen wird: 'frei' nimmt alles, 'Mindestmenge' verlangt einen Anteil deiner geschätzten Produktion, 'Höchstmenge' deckelt die Abnahme pro Monat. Manche Premium-Molkereien verlangen zusätzlich Auflagen wie eine Mindest-Herdengesundheit. Alle Konditionen siehst du im Detail, bevor du unterschreibst."/>
+        <text name="mc_help_p8_title" text="Vertragsstrafe"/>
+        <text name="mc_help_p8_text" text="Sagst du eine Mindestmenge zu und lieferst sie bis Vertragsende nicht, wird eine Strafe auf die Fehlmenge fällig (Fehlmenge mal Preis mal Faktor). Diese Strafe steht bereits beim Abschluss als eigener Punkt im Detail - du weißt also vorher, worauf du dich einlaesst. Verträge ohne Mindestmenge haben keine solche Strafe."/>
+        <text name="mc_help_p9_title" text="Verlängern und Nachliefern"/>
+        <text name="mc_help_p9_text" text="Im letzten Monat vor Ablauf wirst du gewarnt und kannst den Vertrag verlängern - zu den alten Konditionen plus einem kleinen Treuebonus auf den Preis. Hattest du eine Mindestmenge nicht ganz erfüllt, wird die Fehlmenge beim Verlängern als Nachlieferung ins nächste Jahr übernommen (statt Geldstrafe): Das neue Ziel ist dann normales Ziel plus Restschuld. Lässt du den Vertrag dagegen auslaufen, greift die normale Strafe."/>
+        <text name="mc_help_p10_title" text="Vorzeitig kündigen"/>
+        <text name="mc_help_p10_text" text="Einen laufenden Vertrag kannst du jederzeit vorzeitig kündigen. Dabei wird eine Ablöse fällig, die sich am noch offenen Restwert orientiert (Restwert mal 1,2). Vor der Kündigung fragt dich das Spiel in einem Dialog, ob du das mit der genannten Ablöse wirklich willst. So kommst du bei Bedarf aus einem Vertrag heraus, zahlst dafür aber einen Aufschlag."/>
+        <text name="dairy_bueffelhof_title" text="Büffelhof am Fluss"/>
+        <text name="dairy_bueffelhof_desc" text="Direktvermarktung: flexibel, monatlich, kurze Bindung, keine Auflagen."/>
+        <text name="dairy_bueffel_mozzarella_title" text="Mozzarella-Manufaktur"/>
+        <text name="dairy_bueffel_mozzarella_desc" text="Frische Mozzarella: hoher Aufschlag, halbjährlich, mittlere Bindung."/>
+        <text name="dairy_bueffel_feinkaese_title" text="Büffel-Feinkäserei"/>
+        <text name="dairy_bueffel_feinkaese_desc" text="Edle Büffelkäse: hoher Aufschlag, hohe Quote, längere Bindung."/>
+        <text name="dairy_bueffel_delikatess_title" text="Delikatess-Molkerei"/>
+        <text name="dairy_bueffel_delikatess_desc" text="Feinkost: Spitzenaufschlag, lange Bindung, Tierwohl-Auflage."/>
+        <text name="dairy_bueffel_hofladen_title" text="Büffel-Hofladen"/>
+        <text name="dairy_bueffel_hofladen_desc" text="Ab-Hof-Verkauf: flexibel, monatlich, keine Auflagen."/>
+        <text name="dairy_bueffel_regional_title" text="Regionalmolkerei Büffel"/>
+        <text name="dairy_bueffel_regional_desc" text="Regionaler Großabnehmer: kleiner Aufschlag, hohe Quote, monatlich."/>
+        <text name="dairy_bueffel_export_title" text="Büffelmilch-Export"/>
+        <text name="dairy_bueffel_export_desc" text="Stark marktgekoppelt: hohe Chance, hohes Risiko, keine Quote."/>
+        <text name="dairy_bueffel_ricotta_title" text="Ricotta-Käserei"/>
+        <text name="dairy_bueffel_ricotta_desc" text="Frischkäse: guter Aufschlag, monatliche Zahlung, mittlere Quote."/>
+        <text name="dairy_bueffel_gelateria_title" text="Büffel-Gelateria"/>
+        <text name="dairy_bueffel_gelateria_desc" text="Speiseeis aus Büffelmilch: hoher Aufschlag, quartalsweise."/>
+        <text name="dairy_bueffel_bio_title" text="Bio-Büffelhof"/>
+        <text name="dairy_bueffel_bio_desc" text="Premium-Bio: Spitzenaufschlag, lange Bindung, strenge Tierwohl-Auflage."/>
+        <text name="dairy_bueffel_gourmet_title" text="Gourmet-Feinkost Büffel"/>
+        <text name="dairy_bueffel_gourmet_desc" text="Feinkost-Manufaktur: höchster Aufschlag, Tierwohl-Auflage."/>
+        <text name="dairy_bueffel_kaeserei_sued_title" text="Büffel-Käserei Sued"/>
+        <text name="dairy_bueffel_kaeserei_sued_desc" text="Käserei: solider Aufschlag, halbjährliche Zahlung."/>
+        <text name="mc_typeBuffalo"  text="Büffel"/>
     </texts>
 </l10n>

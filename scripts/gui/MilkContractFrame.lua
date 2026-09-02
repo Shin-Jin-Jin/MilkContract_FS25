@@ -65,6 +65,7 @@ function MilkContractFrame:onGuiSetupFinished()
         self.milkTypeSelector:setTexts({
             self.i18n:getText("mc_typeCow"),
             self.i18n:getText("mc_typeGoat"),
+            self.i18n:getText("mc_typeBuffalo"),
         })
         if self.milkTypeSelector.setState ~= nil then
             self.milkTypeSelector:setState(1, false)   -- Start: Kuh
@@ -149,9 +150,15 @@ function MilkContractFrame:onClickToggleType()
     self:refresh()
 end
 
--- Callback des nativen Umschalters (state: 1=Kuh, 2=Ziege)
+-- Callback des nativen Umschalters (state: 1=Kuh, 2=Ziege, 3=Bueffel)
 function MilkContractFrame:onClickMilkTypeSelector(state)
-    self.selectedMilkType = (state == 2) and "goat" or "cow"
+    if state == 2 then
+        self.selectedMilkType = "goat"
+    elseif state == 3 then
+        self.selectedMilkType = "buffalo"
+    else
+        self.selectedMilkType = "cow"
+    end
     self.selectedIndex = 1
     if self.dairyList ~= nil then self.dairyList:setSelectedItem(1, 1, true) end
     self:refresh()
@@ -304,10 +311,14 @@ end
 
 function MilkContractFrame:quotaStr(dairy)
     if dairy:hasMinimumQuota() then
-        return string.format("%s %d %%", self.i18n:getText("mc_minQuota"), dairy.quota.percentOfEstimated or 0)
+        local pct = (g_milkContractManager ~= nil and g_milkContractManager:getOfferQuota(dairy.id))
+                    or dairy.quota.percentOfEstimated or 0
+        return string.format("%s %d %%", self.i18n:getText("mc_minQuota"), pct)
     elseif dairy:hasMaximumCap() then
+        local cap = (g_milkContractManager ~= nil and g_milkContractManager:getOfferQuota(dairy.id))
+                    or dairy.quota.litersPerMonth or 0
         return string.format("%s %s l", self.i18n:getText("mc_maxCap"),
-            g_i18n:formatNumber(dairy.quota.litersPerMonth or 0, 0))
+            g_i18n:formatNumber(cap, 0))
     end
     return self.i18n:getText("mc_noQuota")
 end
@@ -328,10 +339,14 @@ end
 function MilkContractFrame:reqStrMultiline(dairy)
     local parts = {}
     if dairy.requirements.minHerdHealth ~= nil then
-        table.insert(parts, string.format("%s %d%%", self.i18n:getText("mc_reqHealthShort"), dairy.requirements.minHerdHealth))
+        local h = (g_milkContractManager ~= nil and g_milkContractManager:getOfferHealth(dairy.id))
+                  or dairy.requirements.minHerdHealth
+        table.insert(parts, string.format("%s %d%%", self.i18n:getText("mc_reqHealthShort"), h))
     end
     if dairy.requirements.minCalfAgeMonths ~= nil then
-        table.insert(parts, string.format("%s %dM", self.i18n:getText("mc_reqCalfShort"), dairy.requirements.minCalfAgeMonths))
+        local ca = (g_milkContractManager ~= nil and g_milkContractManager:getOfferCalf(dairy.id))
+                   or dairy.requirements.minCalfAgeMonths
+        table.insert(parts, string.format("%s %dM", self.i18n:getText("mc_reqCalfShort"), ca))
     end
     if #parts == 0 then return self.i18n:getText("mc_noReq") end
     return table.concat(parts, "\n")
@@ -472,10 +487,19 @@ function MilkContractFrame:fillActiveStatus(active, farmId)
         self.actNext:setText(string.format("%s (%s)", whenStr, rhythm))
     end
 
-    -- Auflagen + erfuellt/nicht erfuellt
+    -- Auflagen (fixierte Vertragswerte) + erfuellt/nicht erfuellt
     if self.actReq ~= nil then
-        local reqStr = self:reqStrMultiline(dairy)
-        if dairy.requirements.minHerdHealth ~= nil then
+        local parts = {}
+        local effH = active.effHealth or dairy.requirements.minHerdHealth
+        local effC = active.effCalf or dairy.requirements.minCalfAgeMonths
+        if effH ~= nil then
+            table.insert(parts, string.format("%s %d%%", self.i18n:getText("mc_reqHealthShort"), effH))
+        end
+        if effC ~= nil then
+            table.insert(parts, string.format("%s %dM", self.i18n:getText("mc_reqCalfShort"), effC))
+        end
+        local reqStr = (#parts == 0) and self.i18n:getText("mc_noReq") or table.concat(parts, "\n")
+        if effH ~= nil then
             local met = active:meetsHealthRequirement()
             local tag = met and self.i18n:getText("mc_reqMet") or self.i18n:getText("mc_reqNotMet")
             reqStr = reqStr .. "  (" .. tag .. ")"
