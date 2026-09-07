@@ -160,5 +160,7 @@
         <text name="dairy_bueffel_kaeserei_sued_title" text="South Buffalo Cheesery"/>
         <text name="dairy_bueffel_kaeserei_sued_desc" text="Cheesery: solid premium, half-yearly payout."/>
         <text name="mc_typeBuffalo"  text="Buffalo"/>
+        <text name="mc_reqYoung" text="young >= %d%% (under %d M)"/>
+        <text name="mc_reqYoungTag" text="young"/>
     </texts>
 </l10n>

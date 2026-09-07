@@ -41,6 +41,8 @@ function MilkContract.new(dairy, farmId, targetLiters, capPerPeriod)
     -- Gesundheits-Sampling (gleitender Mittelwert)
     self.healthSum    = 0
     self.healthCount  = 0
+    self.youngSum     = 0
+    self.youngCount   = 0
 
     self.active = true
     return self
@@ -58,6 +60,26 @@ function MilkContract:getAverageHealth()
 end
 
 -- Wird bei jedem Day-Change mit dem gewichteten Herdenschnitt gefuettert -----
+function MilkContract:getAverageYoung()
+    if (self.youngCount or 0) == 0 then return nil end
+    return self.youngSum / self.youngCount
+end
+
+function MilkContract:sampleYoung(youngPercent)
+    if youngPercent ~= nil then
+        self.youngSum   = (self.youngSum or 0) + youngPercent
+        self.youngCount = (self.youngCount or 0) + 1
+    end
+end
+
+function MilkContract:meetsYoungRequirement()
+    local req = self.effYoungShare
+    if req == nil then return true end
+    local avg = self:getAverageYoung()
+    if avg == nil then return true end
+    return avg >= req
+end
+
 function MilkContract:sampleHealth(healthPercent)
     if healthPercent ~= nil then
         self.healthSum   = self.healthSum + healthPercent
@@ -167,6 +189,10 @@ function MilkContract:saveToXMLFile(xmlFile, key)
     if self.effQuotaPercent ~= nil then xmlFile:setFloat(key .. "#effQuotaPercent", self.effQuotaPercent) end
     if self.effHealth       ~= nil then xmlFile:setFloat(key .. "#effHealth",       self.effHealth) end
     if self.effCalf         ~= nil then xmlFile:setInt(key   .. "#effCalf",         self.effCalf) end
+    if self.effYoungShare   ~= nil then xmlFile:setFloat(key .. "#effYoungShare",   self.effYoungShare) end
+    if self.effYoungAge     ~= nil then xmlFile:setInt(key   .. "#effYoungAge",     self.effYoungAge) end
+    xmlFile:setFloat(key .. "#youngSum",   self.youngSum or 0)
+    xmlFile:setInt(key   .. "#youngCount", self.youngCount or 0)
 end
 
 -- @param dairyById  Lookup aus MilkContractLoader.load().byId
@@ -199,5 +225,9 @@ function MilkContract.loadFromXMLFile(xmlFile, key, dairyById)
     c.effQuotaPercent     = xmlFile:getFloat(key .. "#effQuotaPercent")
     c.effHealth           = xmlFile:getFloat(key .. "#effHealth")
     c.effCalf             = xmlFile:getInt(key   .. "#effCalf")
+    c.effYoungShare       = xmlFile:getFloat(key .. "#effYoungShare")
+    c.effYoungAge         = xmlFile:getInt(key   .. "#effYoungAge")
+    c.youngSum            = xmlFile:getFloat(key .. "#youngSum") or 0
+    c.youngCount          = xmlFile:getInt(key   .. "#youngCount") or 0
     return c
 end

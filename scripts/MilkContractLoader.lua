@@ -44,6 +44,9 @@ function MilkContractLoader.registerSchema()
     schema:register(XMLValueType.FLOAT, key .. ".requirements.minHerdHealth#variance", "+/- Prozentpunkte (dynamisch)", 0)
     schema:register(XMLValueType.INT,   key .. ".requirements.minCalfAge#months", "")
     schema:register(XMLValueType.INT,   key .. ".requirements.minCalfAge#variance", "+/- Monate (dynamisch)", 0)
+    schema:register(XMLValueType.FLOAT, key .. ".requirements.minYoungShare#percent", "Mindestanteil junger Tiere in %")
+    schema:register(XMLValueType.FLOAT, key .. ".requirements.minYoungShare#variance", "+/- Prozentpunkte (dynamisch)", 0)
+    schema:register(XMLValueType.INT,   key .. ".requirements.minYoungShare#maxAgeMonths", "Grenze 'jung' in Monaten", 12)
 
     MilkContractLoader.schema = schema
 end
@@ -100,6 +103,9 @@ local function loadDairy(xmlFile, key)
     d.requirements.minHerdHealthVariance = xmlFile:getValue(key .. ".requirements.minHerdHealth#variance", 0)
     d.requirements.minCalfAgeMonths      = xmlFile:getValue(key .. ".requirements.minCalfAge#months")
     d.requirements.minCalfAgeVariance    = xmlFile:getValue(key .. ".requirements.minCalfAge#variance", 0)
+    d.requirements.minYoungSharePercent  = xmlFile:getValue(key .. ".requirements.minYoungShare#percent")
+    d.requirements.minYoungShareVariance = xmlFile:getValue(key .. ".requirements.minYoungShare#variance", 0)
+    d.requirements.youngMaxAgeMonths     = xmlFile:getValue(key .. ".requirements.minYoungShare#maxAgeMonths", 12)
 
     return d
 end

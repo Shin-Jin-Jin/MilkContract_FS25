@@ -4,6 +4,20 @@ All notable changes to **MilkContract** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and the project uses Farming Simulator's four-part version numbers.
 
+## [0.4.1.0]
+
+### Added
+- **Dynamic quotas and requirements**: each dairy can define a variance span in `molkereien.xml` (`percentVariance`, `litersVariance`, and `variance` on health/young). A concrete value is rolled within the span when the yearly offer is built (seed-deterministic, MP-safe) and fixed on the contract at signing.
+- **Young-animal requirement** (`minYoungShare`): a dairy can require a minimum share of the herd to be younger than a per-dairy age limit; sampled over the contract term like herd health.
+- `mcAnimals` console command to dump raw animal clusters (age, health, count) for diagnostics.
+
+### Fixed
+- Herd-health check now reads the correct husbandry per milk type (previously always read cow barns).
+- Removed the last `pcall` (empty-pallet deletion now calls delete directly, so errors are visible).
+
+### Changed
+- Version bumped 0.4.0.0 -> 0.4.1.0; docs updated.
+
 ## [0.4.0.0]
 
 ### Added

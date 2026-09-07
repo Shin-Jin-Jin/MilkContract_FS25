@@ -123,7 +123,7 @@
             <penalty factor="1.5" />
             <requirements>
                 <minHerdHealth percent="85" variance="5" />
-                <minCalfAge months="12" variance="3" />
+                <minYoungShare percent="15" maxAgeMonths="12" variance="5" />
             </requirements>
         </dairy>
 
@@ -194,7 +194,7 @@
             <penalty factor="1.5" />
             <requirements>
                 <minHerdHealth percent="90" variance="4" />
-                <minCalfAge months="15" variance="3" />
+                <minYoungShare percent="15" maxAgeMonths="15" variance="5" />
             </requirements>
         </dairy>
 
@@ -228,7 +228,8 @@
             <penalty factor="1.5" />
             <requirements>
                 <minHerdHealth percent="85" variance="5" />
-            </requirements>
+            
+                <minYoungShare percent="12" maxAgeMonths="10" variance="5" /></requirements>
         </dairy>
 
 
@@ -431,7 +432,8 @@
             <penalty factor="1.5" />
             <requirements>
                 <minHerdHealth percent="90" variance="4" />
-            </requirements>
+            
+                <minYoungShare percent="12" maxAgeMonths="10" variance="5" /></requirements>
         </dairy>
 
         <dairy id="bueffel_gourmet" milkType="buffalo"

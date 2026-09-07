@@ -163,5 +163,7 @@
         <text name="dairy_bueffel_kaeserei_sued_title" text="Büffel-Käserei Sued"/>
         <text name="dairy_bueffel_kaeserei_sued_desc" text="Käserei: solider Aufschlag, halbjährliche Zahlung."/>
         <text name="mc_typeBuffalo"  text="Büffel"/>
+        <text name="mc_reqYoung" text="Nachwuchs >= %d%% (unter %d M)"/>
+        <text name="mc_reqYoungTag" text="Nachwuchs"/>
     </texts>
 </l10n>

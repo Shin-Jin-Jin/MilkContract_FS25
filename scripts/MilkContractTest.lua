@@ -74,6 +74,23 @@ function MilkContractTest.status(self)
                 c.deliveredTotal or 0, c.targetLiters or 0,
                 c.periodsElapsed or 0, c.durationMonths or 0, rem,
                 c.priceBonus or 1, c.accruedPayout or 0)
+            -- Auflagen: aktuell vs. gefordert
+            local ftName = c.dairy ~= nil and c.dairy.fillTypeName or nil
+            if c.effHealth ~= nil then
+                local cur = m:getWeightedHerdHealth(myFarm(), ftName)
+                p("  Gesundheit: aktuell %s%% (Schnitt %s) | gefordert %.0f%% -> %s",
+                    cur and string.format("%.0f", cur) or "-",
+                    c.getAverageHealth ~= nil and c:getAverageHealth() and string.format("%.0f", c:getAverageHealth()) or "-",
+                    c.effHealth, c:meetsHealthRequirement() and "erfuellt" or "NICHT erfuellt")
+            end
+            if c.effYoungShare ~= nil then
+                local cur = m:getYoungShare(myFarm(), ftName, c.effYoungAge)
+                p("  Nachwuchs (< %d M): aktuell %s%% (Schnitt %s) | gefordert %.0f%% -> %s",
+                    c.effYoungAge or 12,
+                    cur and string.format("%.0f", cur) or "-",
+                    c.getAverageYoung ~= nil and c:getAverageYoung() and string.format("%.0f", c:getAverageYoung()) or "-",
+                    c.effYoungShare, c:meetsYoungRequirement() and "erfuellt" or "NICHT erfuellt")
+            end
         end
     end
 end
@@ -188,11 +205,51 @@ function MilkContractTest.extend(self, milkType)
     MilkContractTest:status()
 end
 
+-- ---- mcAnimals : Tier-Cluster der Staelle roh ausgeben (Diagnose) -----------
+function MilkContractTest.animals(self)
+    local m = mgr()
+    if m == nil then p("Manager nicht bereit."); return end
+    local farmId = myFarm()
+
+    local producers = m:getProducers(farmId, nil)
+    if #producers == 0 then p("Keine milchgebenden Staelle gefunden."); return end
+
+    for pi, e in ipairs(producers) do
+        local h = e.placeable
+        p("== Stall %d [%s] ==", pi, e.kind)
+        if h.getClusters == nil then
+            p("   (kein getClusters)")
+        else
+            local clusters = h:getClusters()
+            if clusters == nil or #clusters == 0 then
+                p("   (keine Cluster / leer)")
+            else
+                for ci, c in ipairs(clusters) do
+                    -- alle Felder des Clusters auflisten (nur einfache Werte)
+                    local fields = {}
+                    for k, v in pairs(c) do
+                        local tv = type(v)
+                        if tv == "number" or tv == "string" or tv == "boolean" then
+                            table.insert(fields, string.format("%s=%s", tostring(k), tostring(v)))
+                        elseif tv == "function" then
+                            table.insert(fields, tostring(k) .. "()")
+                        end
+                    end
+                    table.sort(fields)
+                    p("   Cluster %d: %s", ci, table.concat(fields, "  "))
+                end
+            end
+        end
+    end
+    p("Hinweis: gesucht sind Felder fuer Alter, Untertyp (Kalb/erwachsen) und Anzahl.")
+end
+
 -- ---- Registrierung --------------------------------------------------------
 function MilkContractTest.register()
     if addConsoleCommand == nil then return end
     addConsoleCommand("mcStatus", "Milchvertrag: Ueberblick (Angebot, Vertrag, Preise)", "status", MilkContractTest)
     addConsoleCommand("mcStalls", "Milchvertrag: Staelle & Mengen je Milchtyp",          "stalls", MilkContractTest)
+    addConsoleCommand("mcAnimals","Milchvertrag: Tier-Cluster roh ausgeben (Diagnose)",  "animals", MilkContractTest)
     addConsoleCommand("mcRotate", "Milchvertrag: Angebot rotieren (Seed +1)",            "rotate", MilkContractTest)
     addConsoleCommand("mcReroll", "Milchvertrag: Angebot neu wuerfeln (zufaellig)",      "reroll", MilkContractTest)
     addConsoleCommand("mcPeriod", "Milchvertrag: einen Monat vorspulen",                 "period", MilkContractTest)

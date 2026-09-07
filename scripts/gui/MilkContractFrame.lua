@@ -348,6 +348,11 @@ function MilkContractFrame:reqStrMultiline(dairy)
                    or dairy.requirements.minCalfAgeMonths
         table.insert(parts, string.format("%s %dM", self.i18n:getText("mc_reqCalfShort"), ca))
     end
+    if dairy.requirements.minYoungSharePercent ~= nil and g_milkContractManager ~= nil then
+        local yp  = g_milkContractManager:getOfferYoung(dairy.id) or dairy.requirements.minYoungSharePercent
+        local yage = g_milkContractManager:getOfferYoungAge(dairy.id) or dairy.requirements.youngMaxAgeMonths or 12
+        table.insert(parts, string.format(self.i18n:getText("mc_reqYoung"), yp, yage))
+    end
     if #parts == 0 then return self.i18n:getText("mc_noReq") end
     return table.concat(parts, "\n")
 end
@@ -498,11 +503,20 @@ function MilkContractFrame:fillActiveStatus(active, farmId)
         if effC ~= nil then
             table.insert(parts, string.format("%s %dM", self.i18n:getText("mc_reqCalfShort"), effC))
         end
+        if active.effYoungShare ~= nil then
+            table.insert(parts, string.format(self.i18n:getText("mc_reqYoung"),
+                active.effYoungShare, active.effYoungAge or 12))
+        end
         local reqStr = (#parts == 0) and self.i18n:getText("mc_noReq") or table.concat(parts, "\n")
         if effH ~= nil then
             local met = active:meetsHealthRequirement()
             local tag = met and self.i18n:getText("mc_reqMet") or self.i18n:getText("mc_reqNotMet")
             reqStr = reqStr .. "  (" .. tag .. ")"
+        end
+        if active.effYoungShare ~= nil then
+            local met = active:meetsYoungRequirement()
+            local tag = met and self.i18n:getText("mc_reqMet") or self.i18n:getText("mc_reqNotMet")
+            reqStr = reqStr .. "  " .. self.i18n:getText("mc_reqYoungTag") .. " (" .. tag .. ")"
         end
         self.actReq:setText(reqStr)
     end

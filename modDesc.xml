@@ -6,10 +6,10 @@
     Den korrekten Wert aus einer offiziellen Mod / dem SDK deiner
     Installation uebernehmen (Platzhalter unten).
 -->
-<modDesc descVersion="98">
+<modDesc descVersion="111">
 
     <author>Shin_Jin_Jin</author>
-    <version>0.4.0.0</version>
+    <version>0.4.1.0</version>
 
     <title>
         <en>Milk Contract</en>
@@ -50,6 +50,10 @@ Features:
 - Saveable and multiplayer-ready (server-authoritative)
 
 Changelog:
+0.4.1.0
+- Dynamische Quoten und Auflagen (Schwankung je Molkerei, jährlich neu)
+- Neue Auflage: Mindestanteil junger Tiere in der Herde
+- Gesundheitsprüfung für alle Milchsorten korrigiert
 0.4.0.0
 - Buffalo milk as a third milk type (12 dairies, tank pickup)
 - Selector now cow / goat / buffalo; up to three contracts in parallel
@@ -90,6 +94,10 @@ Funktionen:
 - Speicherbar und mehrspieler-tauglich (Server-autoritativ)
 
 Changelog:
+0.4.1.0
+- Dynamic quotas and requirements (per-dairy variance, re-rolled yearly)
+- New requirement: minimum share of young animals in the herd
+- Health check fixed for all milk types
 0.4.0.0
 - Büffelmilch als dritter Milchtyp (12 Molkereien, Tank-Abnahme)
 - Umschalter jetzt Kuh / Ziege / Büffel; drei Verträge parallel möglich

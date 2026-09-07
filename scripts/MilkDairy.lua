@@ -27,6 +27,7 @@ function MilkDairy:hasMinimumQuota() return self.quota.type == "minimum" end
 function MilkDairy:hasMaximumCap()   return self.quota.type == "maximum" end
 function MilkDairy:needsHealthCheck() return self.requirements.minHerdHealth ~= nil end
 function MilkDairy:needsCalfHook()    return self.requirements.minCalfAgeMonths ~= nil end
+function MilkDairy:needsYoungCheck()  return self.requirements.minYoungSharePercent ~= nil end
 
 -- Effektiver Preis pro Liter fuer eine gegebene Marktreferenz ----------------
 function MilkDairy:getPricePerLiter(currentMarketPrice)

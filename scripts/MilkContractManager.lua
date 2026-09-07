@@ -117,6 +117,8 @@ function MilkContractManager:rebuildOffer()
     self.offerQuota  = {}   -- [id] = Prozent (minimum) ODER Liter (maximum)
     self.offerHealth = {}   -- [id] = Prozent oder nil
     self.offerCalf   = {}   -- [id] = Monate oder nil
+    self.offerYoung    = {} -- [id] = Mindestanteil junger Tiere in %
+    self.offerYoungAge = {} -- [id] = Altersgrenze 'jung' in Monaten
     for _, mt in ipairs(MilkContractManager.MILK_TYPES) do
         for _, id in ipairs(self.offerByType[mt]) do
             self.offerDurations[id] = 3 + (rnd(22) - 1)   -- 3..24
@@ -143,6 +145,12 @@ function MilkContractManager:rebuildOffer()
                     local base = d.requirements.minCalfAgeMonths
                     local v    = d.requirements.minCalfAgeVariance or 0
                     self.offerCalf[id] = math.max(0, base + rollDelta(rnd, v))
+                end
+                if d.requirements.minYoungSharePercent ~= nil then
+                    local base = d.requirements.minYoungSharePercent
+                    local v    = d.requirements.minYoungShareVariance or 0
+                    self.offerYoung[id]    = clampNum(base + rollDelta(rnd, v), 0, 100)
+                    self.offerYoungAge[id] = d.requirements.youngMaxAgeMonths or 12
                 end
             end
         end
@@ -182,6 +190,18 @@ function MilkContractManager:getOfferCalf(dairyId)
     if self.offerCalf ~= nil and self.offerCalf[dairyId] ~= nil then return self.offerCalf[dairyId] end
     local d = self.data ~= nil and self.data.byId[dairyId] or nil
     return d ~= nil and d.requirements.minCalfAgeMonths or nil
+end
+
+function MilkContractManager:getOfferYoung(dairyId)
+    if self.offerYoung ~= nil and self.offerYoung[dairyId] ~= nil then return self.offerYoung[dairyId] end
+    local d = self.data ~= nil and self.data.byId[dairyId] or nil
+    return d ~= nil and d.requirements.minYoungSharePercent or nil
+end
+
+function MilkContractManager:getOfferYoungAge(dairyId)
+    if self.offerYoungAge ~= nil and self.offerYoungAge[dairyId] ~= nil then return self.offerYoungAge[dairyId] end
+    local d = self.data ~= nil and self.data.byId[dairyId] or nil
+    return d ~= nil and d.requirements.youngMaxAgeMonths or 12
 end
 
 -- Gewuerfelte Laufzeit einer angebotenen Molkerei (Fallback: feste Laufzeit).
@@ -345,6 +365,8 @@ function MilkContractManager:doSign(dairyId, farmId)
     c.effQuotaPercent = dairy:hasMinimumQuota() and self:getOfferQuota(dairyId) or nil
     c.effHealth       = (dairy.requirements.minHerdHealth ~= nil) and self:getOfferHealth(dairyId) or nil
     c.effCalf         = (dairy.requirements.minCalfAgeMonths ~= nil) and self:getOfferCalf(dairyId) or nil
+    c.effYoungShare   = (dairy.requirements.minYoungSharePercent ~= nil) and self:getOfferYoung(dairyId) or nil
+    c.effYoungAge     = (dairy.requirements.minYoungSharePercent ~= nil) and self:getOfferYoungAge(dairyId) or nil
     self:setContract(farmId, milkType, c)
     Logging.info("[MilkContract] Farm %d: Vertrag mit '%s' [%s] (%d Monate, Ziel %.0f l, Bonus x%.2f)",
         farmId, dairyId, milkType, months, target, bonus)
@@ -487,7 +509,13 @@ function MilkContractManager:onDayChanged()
         if contract.dairy ~= nil and contract.dairy.needsHealthCheck ~= nil
            and self.data.settings.sampleHealthOnDayChange and contract.dairy:needsHealthCheck() then
             if contract.sampleHealth ~= nil then
-                contract:sampleHealth(self:getWeightedHerdHealth(farmId))
+                contract:sampleHealth(self:getWeightedHerdHealth(farmId, contract.dairy.fillTypeName))
+            end
+        end
+        -- 1b) Jungtier-Anteil sampeln (nur wenn gefordert)
+        if contract.dairy ~= nil and contract.dairy.needsYoungCheck ~= nil and contract.dairy:needsYoungCheck() then
+            if contract.sampleYoung ~= nil then
+                contract:sampleYoung(self:getYoungShare(farmId, contract.dairy.fillTypeName, contract.effYoungAge))
             end
         end
         -- 2) Milch aus den Staellen abnehmen (taeglich, damit nichts ueberlaeuft)
@@ -571,10 +599,12 @@ function MilkContractManager:collectFromPallets(farmId, contract, spec, wantInde
             end
         end
     end
-    -- leere Paletten entfernen (defensiv)
+    -- leere Paletten entfernen (aus Tracking nehmen + loeschen)
     for _, pallet in ipairs(emptied) do
         spec.pallets[pallet] = nil
-        pcall(function() pallet:delete() end)
+        if pallet.delete ~= nil then
+            pallet:delete()
+        end
     end
 end
 
@@ -831,15 +861,15 @@ end
 -- Gewichteter Ø-Gesundheitswert aller Kuh-Staelle (0..100).
 -- Hinweis: getAverageHealthFactor existiert NICHT (Diagnose). Die Gesundheit
 -- liegt in den Tier-Clustern (getClusters). Feldname wird defensiv geprueft.
-function MilkContractManager:getWeightedHerdHealth(farmId)
+function MilkContractManager:getWeightedHerdHealth(farmId, fillTypeName)
     local sumH, sumN = 0, 0
-    for _, husbandry in ipairs(self:getCowHusbandries(farmId)) do
+    for _, e in ipairs(self:getProducers(farmId, fillTypeName)) do
+        local husbandry = e.placeable
         if husbandry.getClusters ~= nil then
             local clusters = husbandry:getClusters()
             if clusters ~= nil then
                 for _, c in ipairs(clusters) do
                     local n = c.numAnimals or (c.getNumAnimals ~= nil and c:getNumAnimals()) or 0
-                    -- Gesundheit im Cluster kann 'health' (0..100) heissen; defensiv lesen
                     local h = c.health or c.healthFactor
                     if h ~= nil and n > 0 then
                         if h <= 1 then h = h * 100 end   -- 0..1 -> %
@@ -850,8 +880,32 @@ function MilkContractManager:getWeightedHerdHealth(farmId)
             end
         end
     end
-    if sumN == 0 then return nil end   -- kein Wert -> nicht bestrafen
+    if sumN == 0 then return nil end
     return sumH / sumN
+end
+
+-- Anteil junger Tiere (age < maxAgeMonths) an der Herde in Prozent.
+function MilkContractManager:getYoungShare(farmId, fillTypeName, maxAgeMonths)
+    local maxAge = maxAgeMonths or 12
+    local young, total = 0, 0
+    for _, e in ipairs(self:getProducers(farmId, fillTypeName)) do
+        local husbandry = e.placeable
+        if husbandry.getClusters ~= nil then
+            local clusters = husbandry:getClusters()
+            if clusters ~= nil then
+                for _, c in ipairs(clusters) do
+                    local n   = c.numAnimals or (c.getNumAnimals ~= nil and c:getNumAnimals()) or 0
+                    local age = c.age or (c.getAge ~= nil and c:getAge()) or nil
+                    if n > 0 and age ~= nil then
+                        total = total + n
+                        if age < maxAge then young = young + n end
+                    end
+                end
+            end
+        end
+    end
+    if total == 0 then return nil end
+    return young / total * 100
 end
 
 -- Geschaetzte Tagesmilchmenge (Liter). Nutzt die schon im Spiel gerechneten
