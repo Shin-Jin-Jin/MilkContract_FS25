@@ -141,6 +141,5 @@ function MilkContractLoader.load(path)
     end)
 
     xmlFile:delete()
-    Logging.info("[MilkContract] %d Molkereien geladen", #dairies)
     return { settings = settings, dairies = dairies, byId = byId }
 end

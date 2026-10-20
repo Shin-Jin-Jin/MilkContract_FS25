@@ -211,6 +211,18 @@ function MilkContract.loadFromXMLFile(xmlFile, key, dairyById)
     local capPerPeriod = xmlFile:getFloat(key .. "#capPerPeriod")   -- nil, wenn nicht vorhanden
 
     local c = MilkContract.new(dairy, farmId, targetLiters, capPerPeriod)
+
+    -- Migration: fruehere Versionen haben den Monats-Deckel faelschlich mit
+    -- daysPerPeriod/30 skaliert und dadurch winzig gespeichert (z.B. 129 l
+    -- statt 3862 l). Erkennbar daran, dass er weit unter dem konfigurierten
+    -- Monatswert der Molkerei liegt -> auf den Monatswert korrigieren.
+    if dairy.hasMaximumCap ~= nil and dairy:hasMaximumCap() then
+        local base = (dairy.quota ~= nil) and dairy.quota.litersPerMonth or nil
+        if base ~= nil and base > 0 and (c.capPerPeriod == nil or c.capPerPeriod < base * 0.5) then
+            c.capPerPeriod = base
+        end
+    end
+
     c.deliveredThisPeriod = xmlFile:getFloat(key .. "#deliveredThisPeriod") or 0
     c.deliveredTotal      = xmlFile:getFloat(key .. "#deliveredTotal") or 0
     c.premiumThisPeriod   = xmlFile:getFloat(key .. "#premiumThisPeriod") or 0

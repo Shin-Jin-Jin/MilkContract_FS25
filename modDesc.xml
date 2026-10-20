@@ -6,18 +6,18 @@
     Den korrekten Wert aus einer offiziellen Mod / dem SDK deiner
     Installation uebernehmen (Platzhalter unten).
 -->
-<modDesc descVersion="111">
+<modDesc descVersion="114">
 
     <author>Shin_Jin_Jin</author>
-    <version>0.4.1.0</version>
+    <version>1.0.0.0</version>
 
     <title>
         <en>Milk Contract</en>
         <de>Milchvertrag</de>
-        <fr>Contrat laitier</fr>
-        <es>Contrato de leche</es>
-        <it>Contratto del latte</it>
-        <pl>Kontrakt mleczny</pl>
+        <fr>Contrat Laitier</fr>
+        <es>Contrato De Leche</es>
+        <it>Contratto Del Latte</it>
+        <pl>Kontrakt Mleczny</pl>
         <nl>Melkcontract</nl>
     </title>
 
@@ -48,23 +48,6 @@ Features:
 - Shortfall penalty on unmet minimum quotas (shown up front at signing)
 - Early cancellation possible - for a termination fee, with a confirmation prompt
 - Saveable and multiplayer-ready (server-authoritative)
-
-Changelog:
-0.4.1.0
-- Dynamische Quoten und Auflagen (Schwankung je Molkerei, jährlich neu)
-- Neue Auflage: Mindestanteil junger Tiere in der Herde
-- Gesundheitsprüfung für alle Milchsorten korrigiert
-0.4.0.0
-- Buffalo milk as a third milk type (12 dairies, tank pickup)
-- Selector now cow / goat / buffalo; up to three contracts in parallel
-- Dynamic quotas and requirements (per-dairy variance)
-0.3.0.0
-- Goat milk (pallet pickup) and 12 goat dairies
-- Separate contract per milk type; in-menu selector
-- Shortfall penalty, carry-over on renewal, early cancellation
-- Help pages in the game's help menu
-0.2.0.0
-- First version: milk contract system for cows
 ]]></en>
         <de><![CDATA[Habt ihr euch schon mal gefragt, was eigentlich mit der ganzen Milch passiert, die eure Kühe Tag für Tag geben? Ganz normal wandert sie zum Tagespreis über die Verkaufsstelle - mal gibt es mehr Geld dafür, mal weniger. Aber es geht auch anders. Und wie das funktioniert, das schauen wir uns jetzt einmal ganz in Ruhe an.
 
@@ -92,23 +75,6 @@ Funktionen:
 - Vertragsstrafe bei Fehlmenge (transparent schon beim Abschluss angezeigt)
 - Vorzeitige Kündigung möglich - gegen Ablöse und mit Sicherheitsabfrage
 - Speicherbar und mehrspieler-tauglich (Server-autoritativ)
-
-Changelog:
-0.4.1.0
-- Dynamic quotas and requirements (per-dairy variance, re-rolled yearly)
-- New requirement: minimum share of young animals in the herd
-- Health check fixed for all milk types
-0.4.0.0
-- Büffelmilch als dritter Milchtyp (12 Molkereien, Tank-Abnahme)
-- Umschalter jetzt Kuh / Ziege / Büffel; drei Verträge parallel möglich
-- Dynamische Quoten und Auflagen (Schwankung je Molkerei)
-0.3.0.0
-- Ziegenmilch (Paletten-Abnahme) und 12 Ziegen-Molkereien
-- Verträge pro Milchtyp getrennt; Umschalter im Menü
-- Strafe bei Fehlmenge, Nachliefern beim Verlängern, vorzeitige Kündigung
-- Hilfe-Seiten im Spiel-Hilfemenü
-0.2.0.0
-- Erste Version: Milch-Vertragssystem für Kühe
 ]]></de>
     </description>
 

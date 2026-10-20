@@ -4,6 +4,26 @@ All notable changes to **MilkContract** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and the project uses Farming Simulator's four-part version numbers.
 
+## [1.0.0.0]
+
+First public Modhub release.
+
+### Added
+- **In-menu "no matching barn" warning**: selecting a dairy whose milk type you have no barn for now shows the hint directly in the Milk Contract page's detail panel, instead of an easy-to-miss HUD side notification on another page.
+- **Progress line for maximum-cap ("free up to X/month") contracts**: shows the current month's usage against the cap *and* the running total delivered (`0 / 3,862 l (0 %) (this month) · total 40 l`), so the line stays meaningful even right after a period reset.
+
+### Fixed
+- **Maximum-cap contracts collected only a fraction of the cap**: the monthly limit was wrongly scaled by `daysPerPeriod / 30`, shrinking e.g. a 3,862 l/month cap to ~129 l at the default 1 day per month. The monthly cap now applies per period as intended, so a contract that should fill within a month actually does.
+- Savegames created with the old, shrunken cap are self-healed on load.
+- The "no matching barn" status text is no longer truncated in the detail panel (value field widened, texts shortened).
+
+### Changed
+- Version bumped 0.4.1.0 -> 1.0.0.0; `descVersion` 111 -> 114.
+- Mod title capitalized ("Milk Contract" / "Milchvertrag").
+- Early cancellation of a no-obligation ("free") contract no longer charges a termination penalty.
+- A contract can no longer be signed without owning a barn that produces the matching milk type.
+- Removed the embedded changelog from the modDesc description, removed debug log output, fixed GUI colour-preset warnings, and resized the menu icon to a power-of-two texture for the Modhub release.
+
 ## [0.4.1.0]
 
 ### Added

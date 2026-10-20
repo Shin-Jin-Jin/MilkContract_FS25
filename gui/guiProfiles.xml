@@ -41,7 +41,7 @@
         <textBold value="false" />
         <textSize value="16px" />
         <textAlignment value="left" />
-        <textColor value="$preset_fs25_colorActive" />
+        <textColor value="0.553 0.761 0.122 1" />
         <textSelectedColor value="$preset_fs25_colorMainDark" />
     </Profile>
 
@@ -64,7 +64,7 @@
         <textSize value="18px" />
         <textBold value="true" />
         <textAlignment value="left" />
-        <textColor value="$preset_fs25_colorActive" />
+        <textColor value="0.553 0.761 0.122 1" />
     </Profile>
 
     <Profile name="mc_detailTitle" extends="fs25_textDefault" with="anchorTopLeft">
@@ -88,11 +88,11 @@
         <size value="0.42 26px" />
         <textSize value="15px" />
         <textAlignment value="left" />
-        <textColor value="$preset_fs25_colorActive" />
+        <textColor value="0.553 0.761 0.122 1" />
     </Profile>
 
     <Profile name="mc_detailValue" extends="fs25_textDefault" with="anchorTopLeft">
-        <size value="320px 26px" />
+        <size value="520px 26px" />
         <textSize value="18px" />
         <textBold value="true" />
         <textAlignment value="left" />

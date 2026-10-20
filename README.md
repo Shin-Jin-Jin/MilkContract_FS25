@@ -118,7 +118,7 @@ All dairies and their conditions live in `molkereien.xml` (data-driven). Tunable
 
 ## Version
 
-Mod version 0.4.1.0 · modDesc `descVersion="111"` (FS25)
+Mod version 1.0.0.0 · modDesc `descVersion="114"` (FS25)
 
 ## License / Credits
 

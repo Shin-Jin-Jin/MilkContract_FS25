@@ -408,7 +408,14 @@ function MilkContractFrame:fillDairyDetail(dairy, farmId)
     if self.detailReq ~= nil then self.detailReq:setText(self:reqStrMultiline(dairy)) end
     if self.detailPenalty ~= nil then self.detailPenalty:setText(self:penaltyStr(dairy)) end
     if self.detailStatus ~= nil then
-        self.detailStatus:setText(self.i18n:getText("mc_noContract"))
+        -- Fehlt der passende Stall, direkt auf der Seite warnen (statt nur per
+        -- HUD-Hinweis beim Klick, der auf einer anderen Menueseite erscheint).
+        if g_milkContractManager ~= nil
+           and not g_milkContractManager:hasMatchingBarn(farmId, dairy.fillTypeName) then
+            self.detailStatus:setText(self.i18n:getText("mc_noBarn"))
+        else
+            self.detailStatus:setText(self.i18n:getText("mc_noContract"))
+        end
     end
     if self.detailEstimate ~= nil then
         local months = g_milkContractManager:getOfferDuration(dairy.id)
@@ -461,6 +468,17 @@ function MilkContractFrame:fillActiveStatus(active, farmId)
                     g_i18n:formatNumber(active.carriedDebt, 0))
             end
             self.actProgress:setText(txt)
+        elseif dairy:hasMaximumCap() and (active.capPerPeriod or 0) > 0 then
+            -- Hoechstmengen-Vertrag: Auslastung der AKTUELLEN Periode am Deckel
+            -- PLUS Gesamtmenge, damit die Zeile beim Periodenwechsel nicht leer wirkt.
+            local d   = active.deliveredThisPeriod or 0
+            local cap = active.capPerPeriod
+            local pct = math.min(100, d / cap * 100)
+            self.actProgress:setText(string.format("%s / %s l  (%d %%)  %s  ·  %s %s l",
+                g_i18n:formatNumber(d, 0), g_i18n:formatNumber(cap, 0), pct,
+                self.i18n:getText("mc_thisMonth"),
+                self.i18n:getText("mc_totalShort"),
+                g_i18n:formatNumber(active.deliveredTotal or 0, 0)))
         else
             self.actProgress:setText("-")
         end
@@ -532,6 +550,13 @@ function MilkContractFrame:onClickSign()
     if dairy == nil then return end
     local mt = dairy.milkType or "cow"
     if g_milkContractManager:getContract(farmId, mt) ~= nil then return end
+
+    -- Kein passender Stall -> Hinweis steht bereits im Detailpanel (detailStatus);
+    -- hier nur still abbrechen und die Seite aktualisieren, damit der Hinweis sicher sichtbar ist.
+    if not g_milkContractManager:hasMatchingBarn(farmId, dairy.fillTypeName) then
+        self:updateDetail()
+        return
+    end
 
     -- Eckdaten fuer die Bestaetigung zusammenstellen
     local months = g_milkContractManager:getOfferDuration(dairy.id)

@@ -256,5 +256,4 @@ function MilkContractTest.register()
     addConsoleCommand("mcSign",   "Milchvertrag: Vertrag abschliessen <dairyId>",        "sign",   MilkContractTest)
     addConsoleCommand("mcCancel", "Milchvertrag: Vertrag kuendigen",                     "cancel", MilkContractTest)
     addConsoleCommand("mcExtend", "Milchvertrag: Vertrag verlaengern",                   "extend", MilkContractTest)
-    Logging.info("[MilkContract] Test-Konsolenbefehle registriert (mcStatus, mcStalls, mcRotate, mcReroll, mcPeriod, mcSign, mcCancel, mcExtend).")
 end

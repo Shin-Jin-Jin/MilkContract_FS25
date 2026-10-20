@@ -92,6 +92,8 @@
         <text name="mc_penaltyValue" text="shortfall x price x %.1f"/>
         <text name="mc_notifyExtendedDebt" text="Milk contract with %s renewed - carry-over %s l"/>
         <text name="mc_carryDebt" text="(incl. %s l carry-over)"/>
+        <text name="mc_thisMonth" text="(this month)"/>
+        <text name="mc_totalShort" text="total"/>
         <text name="mc_signConfirm" text="Sign a contract with %s?\nTerm %d months, price %s/l, target approx. %s l."/>
         <text name="mc_extendConfirm" text="Renew the contract with %s?\nSame terms plus loyalty bonus."/>
         <text name="mc_extendConfirmDebt" text="Renew the contract with %s?\nAn open shortfall of %s l will be carried over as redelivery (instead of a penalty)."/>
@@ -162,5 +164,6 @@
         <text name="mc_typeBuffalo"  text="Buffalo"/>
         <text name="mc_reqYoung" text="young >= %d%% (under %d M)"/>
         <text name="mc_reqYoungTag" text="young"/>
+        <text name="mc_noBarn" text="You own no barn for this milk type."/>
     </texts>
 </l10n>

@@ -95,6 +95,8 @@
         <text name="mc_penaltyValue" text="Fehlmenge x Preis x %.1f"/>
         <text name="mc_notifyExtendedDebt" text="Milchvertrag mit %s verlängert - Nachlieferung %s l"/>
         <text name="mc_carryDebt" text="(inkl. %s l Nachlieferung)"/>
+        <text name="mc_thisMonth" text="(akt. Monat)"/>
+        <text name="mc_totalShort" text="gesamt"/>
         <text name="mc_signConfirm" text="Vertrag mit %s abschließen?\nLaufzeit %d Monate, Preis %s/l, Ziel ca. %s l."/>
         <text name="mc_extendConfirm" text="Vertrag mit %s verlängern?\nGleiche Konditionen plus Treuebonus."/>
         <text name="mc_extendConfirmDebt" text="Vertrag mit %s verlängern?\nOffene Fehlmenge von %s l wird als Nachlieferung übernommen (statt Strafe)."/>
@@ -165,5 +167,6 @@
         <text name="mc_typeBuffalo"  text="Büffel"/>
         <text name="mc_reqYoung" text="Nachwuchs >= %d%% (unter %d M)"/>
         <text name="mc_reqYoungTag" text="Nachwuchs"/>
+        <text name="mc_noBarn" text="Kein passender Stall für diese Milchsorte."/>
     </texts>
 </l10n>

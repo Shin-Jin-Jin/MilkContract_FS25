@@ -51,7 +51,6 @@ function InGameMenuMilkContract:setup()
 
     self.fixInGameMenu(page, "MilkContractFrame", InGameMenuMilkContract.ICON_UVS, 2, nil)
 
-    Logging.info("MilkContract: Seite ins InGameMenu eingehaengt.")
 end
 
 

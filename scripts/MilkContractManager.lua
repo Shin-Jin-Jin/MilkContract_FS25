@@ -265,15 +265,6 @@ end
 -- =========================================================================
 --  ZIELMENGE / DECKEL berechnen (periodenskaliert)
 -- =========================================================================
--- Faktor, um Bezugsmonat -> aktuelle Periodenlaenge zu skalieren
-function MilkContractManager:getPeriodScale()
-    local s = self.data.settings
-    if not s.scaleByPeriod then return 1 end
-    local daysPerPeriod = g_currentMission.environment.daysPerPeriod or 1
-    local refDays = s.referenceDays or 30
-    return daysPerPeriod / refDays
-end
-
 -- geschaetzte Jahresproduktion der Farm (Liter). SEAM-nah: nutzt denselben
 -- Herden-Zugriff wie die Gesundheit; hier vereinfacht ueber Tageswert * 365.
 function MilkContractManager:estimateAnnualProduction(farmId, fillTypeName)
@@ -295,8 +286,11 @@ function MilkContractManager:computeContractNumbers(dairy, farmId, months)
         local pct = self:getOfferQuota(dairy.id) or dairy.quota.percentOfEstimated or 0
         target = annual * (pct / 100) * years
     elseif dairy:hasMaximumCap() then
-        local cap0 = self:getOfferQuota(dairy.id) or dairy.quota.litersPerMonth or 0
-        cap = cap0 * self:getPeriodScale()
+        -- Hoechstmenge ist bereits "pro Monat" = pro Periode gemeint.
+        -- Eine Periode ist in FS25 immer ein Monat, egal wie viele Spieltage
+        -- sie umfasst -> der Deckel wird NICHT mit daysPerPeriod skaliert,
+        -- sonst wuerde bei daysPerPeriod=1 nur 1/30 des Deckels abgenommen.
+        cap = self:getOfferQuota(dairy.id) or dairy.quota.litersPerMonth or 0
     end
 
     return target, cap
@@ -348,11 +342,18 @@ function MilkContractManager:requestExtend(farmId, milkType)
 end
 
 -- Server-autoritativ: legt den Vertrag tatsaechlich an.
+-- Besitzt die Farm mindestens einen Stall, der diese Milchsorte produziert?
+function MilkContractManager:hasMatchingBarn(farmId, fillTypeName)
+    return #self:getProducers(farmId, fillTypeName) > 0
+end
+
 function MilkContractManager:doSign(dairyId, farmId)
     local dairy = self.data.byId[dairyId]
     if dairy == nil then return false end
     local milkType = dairy.milkType or "cow"
     if self:getContract(farmId, milkType) ~= nil then return false end   -- je Typ nur einer
+    -- Kein Abschluss ohne passenden Stall fuer diese Milchsorte
+    if not self:hasMatchingBarn(farmId, dairy.fillTypeName) then return false end
 
     local months = self:getOfferDuration(dairyId)
     local bonus  = self:getDurationBonus(months)
@@ -368,8 +369,6 @@ function MilkContractManager:doSign(dairyId, farmId)
     c.effYoungShare   = (dairy.requirements.minYoungSharePercent ~= nil) and self:getOfferYoung(dairyId) or nil
     c.effYoungAge     = (dairy.requirements.minYoungSharePercent ~= nil) and self:getOfferYoungAge(dairyId) or nil
     self:setContract(farmId, milkType, c)
-    Logging.info("[MilkContract] Farm %d: Vertrag mit '%s' [%s] (%d Monate, Ziel %.0f l, Bonus x%.2f)",
-        farmId, dairyId, milkType, months, target, bonus)
     return true
 end
 
@@ -384,8 +383,22 @@ end
 -- Strafe fuer vorzeitige Kuendigung: offener Restwert bis Vertragsende x 1.2
 MilkContractManager.EARLY_CANCEL_FACTOR = 1.2
 
+-- Hat der Vertrag ueberhaupt eine Verpflichtung (Mindestmenge oder Auflage)?
+function MilkContractManager:hasObligation(dairy)
+    if dairy == nil then return false end
+    if dairy.hasMinimumQuota ~= nil and dairy:hasMinimumQuota() then return true end
+    if dairy.requirements ~= nil then
+        if dairy.requirements.minHerdHealth ~= nil then return true end
+        if dairy.requirements.minYoungSharePercent ~= nil then return true end
+        if dairy.requirements.minCalfAgeMonths ~= nil then return true end
+    end
+    return false
+end
+
 function MilkContractManager:getEarlyCancelPenalty(contract, farmId)
     if contract == nil then return 0 end
+    -- "Freie" Vertraege ohne Verpflichtung: keine Abloese beim Kuendigen
+    if not self:hasObligation(contract.dairy) then return 0 end
     local info = self:getContractValueInfo(contract, farmId)
     local dur  = contract.durationMonths or 12
     local remaining = math.max(0, dur - (contract.periodsElapsed or 0))
@@ -404,8 +417,6 @@ function MilkContractManager:doEarlyCancel(farmId, milkType)
     self:removeContract(farmId, milkType)
     self:notifyAll(string.format(g_i18n:getText("mc_notifyCancelled"),
         self:dairyName(c.dairy), g_i18n:formatMoney(penalty, 0, true)))
-    Logging.info("[MilkContract] Farm %d: '%s' vorzeitig gekuendigt (Strafe %.0f).",
-        farmId, c.dairyId, penalty)
 end
 
 function MilkContractManager:requestEarlyCancel(farmId, milkType)
@@ -460,8 +471,6 @@ function MilkContractManager:doExtend(farmId, milkType)
     c.capPerPeriod = cap
     c.carriedDebt  = carryDebt      -- nur zur Anzeige
 
-    Logging.info("[MilkContract] Farm %d: '%s' verlaengert (Bonus x%.2f, Nachlieferung %.0f l).",
-        farmId, c.dairyId, c.priceBonus, carryDebt)
     if carryDebt > 0 then
         self:notifyAll(string.format(g_i18n:getText("mc_notifyExtendedDebt"),
             self:dairyName(c.dairy), g_i18n:formatNumber(carryDebt, 0)))
@@ -491,7 +500,6 @@ function MilkContractManager:applySyncEntries(entries)
             self:setContract(e.farmId, mt, { dairyId = e.dairyId, dairy = dairy })
         end
     end
-    Logging.info("[MilkContract] Vertragsliste vom Server empfangen (%d).", #(entries or {}))
 end
 
 
@@ -654,12 +662,10 @@ function MilkContractManager:onPeriodChanged()
             hadPenalty = true
             self:notifyAll(string.format(g_i18n:getText("mc_notifyEndedPenalty"),
                 self:dairyName(contract.dairy), g_i18n:formatMoney(settle.penalty, 0, true)))
-            Logging.info("[MilkContract] Farm %d: Vertragsstrafe %.0f", farmId, settle.penalty)
         end
 
         if isContractEnd then
             if not contract:meetsHealthRequirement() then
-                Logging.info("[MilkContract] Farm %d: Gesundheitsauflage verfehlt", farmId)
             end
             -- Vertrag ist ausgelaufen -> diesen Typ freigeben (Spieler kann neu waehlen)
             self:removeContract(farmId, milkType)
@@ -667,7 +673,6 @@ function MilkContractManager:onPeriodChanged()
             if not hadPenalty then
                 self:notifyAll(string.format(g_i18n:getText("mc_notifyEnded"), self:dairyName(contract.dairy)))
             end
-            Logging.info("[MilkContract] Farm %d: Vertrag mit '%s' ausgelaufen.", farmId, contract.dairyId)
         elseif (contract.durationMonths or 12) - contract.periodsElapsed == 1 then
             -- letzter Monat beginnt -> einmalig vorwarnen
             self:notifyAll(string.format(g_i18n:getText("mc_notifyExpiring"), self:dairyName(contract.dairy)))
@@ -743,7 +748,6 @@ function MilkContractManager:notify(text)
         mission:showBlinkingWarning(text, 4000)
         return
     end
-    Logging.info("[MilkContract] (Notification) %s", text)
 end
 
 -- Zeigt lokal (Host/SP) UND schickt die Meldung an alle Clients.
@@ -1057,7 +1061,6 @@ function MilkContractManager:saveToSavegame(missionInfo)
 
     xmlFile:save()
     xmlFile:delete()
-    Logging.info("[MilkContract] %d Vertrag/Vertraege gespeichert (%s).", i, path)
 end
 
 function MilkContractManager:restoreFromSavegame()
@@ -1065,7 +1068,6 @@ function MilkContractManager:restoreFromSavegame()
     if g_server == nil then return end
     local path = self:getSavegamePath()
     if path == nil or not fileExists(path) then
-        Logging.info("[MilkContract] Keine Savegame-Datei zum Laden (%s).", tostring(path))
         return
     end
 
@@ -1085,7 +1087,6 @@ function MilkContractManager:restoreFromSavegame()
     end)
 
     xmlFile:delete()
-    Logging.info("[MilkContract] %d Vertrag/Vertraege aus Savegame wiederhergestellt.", n)
 end
 
 
