@@ -334,6 +334,16 @@ function MilkContractFrame:showWarning(text)
     end
 end
 
+-- Dialog fuer einen abgelehnten Abschluss (lokal oder vom Server gemeldet).
+function MilkContractFrame:showSignBlocked(reason, dairy)
+    if (reason == "none" or reason == "idle") and dairy ~= nil then
+        local _, dialogText = self:getBarnWarning(reason, dairy)
+        self:showWarning(dialogText)
+    else
+        self:showWarning(self.i18n:getText("mc_signFailed"))
+    end
+end
+
 -- Kurztext + Dialogtext fuer einen fehlenden/leeren Stall.
 function MilkContractFrame:getBarnWarning(status, dairy)
     local milkName = self.i18n:getText("mc_milkName_" .. tostring(dairy.milkType or "cow"))
@@ -596,11 +606,13 @@ function MilkContractFrame:onClickSign()
 
     -- Kein Stall bzw. keine Milchproduktion fuer diese Sorte -> deutlich warnen
     -- (Dialog) statt still abzubrechen; Detailpanel zeigt den Hinweis ebenfalls.
+    -- Reiner MP-Client: nur "kein Stall" lokal abfangen; ob der Stall Milch
+    -- gibt, entscheidet der Server und meldet eine Ablehnung zurueck
+    -- (MilkContractSignResultEvent -> showSignBlocked).
     local barnStatus = g_milkContractManager:getBarnStatus(farmId, dairy.fillTypeName)
-    if barnStatus ~= "ok" then
-        local _, dialogText = self:getBarnWarning(barnStatus, dairy)
+    if barnStatus == "none" or (barnStatus ~= "ok" and g_server ~= nil) then
         self:updateDetail()
-        self:showWarning(dialogText)
+        self:showSignBlocked(barnStatus, dairy)
         return
     end
 

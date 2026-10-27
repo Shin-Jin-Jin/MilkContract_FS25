@@ -17,9 +17,12 @@ First public Modhub release.
   - Strict ladder per milk type: no-obligation (0.95–1.06×) < maximum cap (1.10×) < minimum quota (1.12–1.18×) < quota + herd health (1.31–1.33×) < quota + health + young-animal share (1.48–1.52×).
   - Term bonus (now +0.5 %/month above 3, max +10.5 %) and renewal loyalty bonus apply only to contracts with obligations; the bands are spaced so no term lets a lower tier overtake a higher one.
   - The menu now shows a concrete €/l price for every dairy (`~` = market-linked), so offers are directly comparable.
-- **Multiplayer**: clients now receive the full contract state (deliveries, payouts, requirements) and get real contract objects, so the menu status and cancel fee work on clients; state is re-synced daily and at every period change.
+- **Multiplayer**: clients now receive the full contract state (deliveries, payouts, requirements) and get real contract objects, so the menu status and cancel fee work on clients; state is re-synced daily and at every period change, and an open menu page refreshes immediately.
+- **Multiplayer**: if the server refuses a client's signing (e.g. barn gives no milk), the client gets the same explanatory dialog; clients derive barn production from the animal clusters when `litersPerHour` is not yet filled.
+- Renewal is re-checked on the server, so a double click can no longer renew twice (target and bonus compounded before).
+- A fixed price is only locked once a real milk price is available (no fallback value is ever locked in).
 - `descVersion` 114 -> 115.
-- Savegames: fixed-price contracts from earlier test versions are migrated to the new relative price on load.
+- Savegames: contracts from earlier test versions are migrated on load (`pricingVersion`): term bonus recalculated under the new rules, fixed prices re-locked relative to the milk price.
 
 ### Added
 - **In-menu "no matching barn" warning**: selecting a dairy whose milk type you have no barn for now shows the hint directly in the Milk Contract page's detail panel, instead of an easy-to-miss HUD side notification on another page.

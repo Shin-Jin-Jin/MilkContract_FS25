@@ -379,14 +379,27 @@ function MilkContractManager:hasMatchingBarn(farmId, fillTypeName)
 end
 
 -- Server-autoritativ: legt den Vertrag tatsaechlich an.
-function MilkContractManager:doSign(dairyId, farmId)
-    local dairy = self.data.byId[dairyId]
-    if dairy == nil then return false end
-    local milkType = dairy.milkType or "cow"
-    if self:getContract(farmId, milkType) ~= nil then return false end   -- je Typ nur einer
+-- Warum kann (noch) nicht abgeschlossen werden? nil = Abschluss moeglich.
+--   "unknown" Molkerei unbekannt / kein Milchpreis verfuegbar
+--   "exists"  fuer diese Milchsorte laeuft schon ein Vertrag
+--   "none"    kein Stall fuer diese Milchsorte
+--   "idle"    Stall vorhanden, aber keine Milchproduktion
+function MilkContractManager:getSignBlockReason(dairyId, farmId)
+    local dairy = self.data ~= nil and self.data.byId[dairyId] or nil
+    if dairy == nil then return "unknown" end
+    if self:getContract(farmId, dairy.milkType or "cow") ~= nil then return "exists" end
     -- Kein Abschluss ohne Stall, der diese Milchsorte auch wirklich produziert.
     -- (Ohne Produktion waere die Mindestmengen-Schaetzung 0 -> Ziel 0 l.)
-    if self:getBarnStatus(farmId, dairy.fillTypeName) ~= "ok" then return false end
+    local status = self:getBarnStatus(farmId, dairy.fillTypeName)
+    if status ~= "ok" then return status end
+    if self:getMarketPriceOrNil(dairy.fillTypeName) == nil then return "unknown" end
+    return nil
+end
+
+function MilkContractManager:doSign(dairyId, farmId)
+    if self:getSignBlockReason(dairyId, farmId) ~= nil then return false end
+    local dairy = self.data.byId[dairyId]
+    local milkType = dairy.milkType or "cow"
 
     local months = self:getOfferDuration(dairyId)
     local bonus  = self:getDurationBonus(months, dairy)
@@ -397,9 +410,7 @@ function MilkContractManager:doSign(dairyId, farmId)
     c.priceBonus     = bonus
     -- Festpreis-Molkereien: Literpreis beim Abschluss fixieren (relativ zum
     -- aktuellen Milchpreis des Spiels, ohne Laufzeitbonus).
-    if not dairy:isMarketPriced() then
-        c.lockedBasePrice = dairy:getPricePerLiter(self:getCurrentMilkMarketPrice(dairy.fillTypeName))
-    end
+    self:ensureLockedPrice(c)
     -- gewuerfelte (dynamische) Konditionen im Vertrag fixieren
     c.effQuotaPercent = dairy:hasMinimumQuota() and self:getOfferQuota(dairyId) or nil
     c.effHealth       = (dairy.requirements.minHerdHealth ~= nil) and self:getOfferHealth(dairyId) or nil
@@ -480,6 +491,9 @@ end
 function MilkContractManager:doExtend(farmId, milkType)
     local c = self:getContract(farmId, milkType)
     if c == nil then return end
+    -- Server-seitig erneut pruefen: ein doppelter Klick (z.B. MP-Client mit
+    -- noch nicht aktualisiertem Menue) darf nicht zweimal verlaengern.
+    if not self:isRenewable(c) then return end
 
     -- offenen Betrag der laufenden Periode zuerst auszahlen
     if (c.accruedPayout or 0) > 0 then
@@ -574,6 +588,7 @@ function MilkContractManager:onDayChanged()
             end
         end
         -- 2) Milch aus den Staellen abnehmen (taeglich, damit nichts ueberlaeuft)
+        self:ensureLockedPrice(contract)
         if contract.peekTakeAmount ~= nil then
             self:collectMilk(farmId, contract)   -- Preis wird je Fuelltyp intern bestimmt
         end
@@ -996,18 +1011,41 @@ function MilkContractManager:estimateDailyMilk(farmId, fillTypeName)
     end
     for _, e in ipairs(self:getProducers(farmId, fillTypeName)) do
         local spec = e.spec
-        if e.kind == "milk" then
-            for _, ftIndex in ipairs(getMilkFillTypeIndices(spec)) do
-                if wantIndex == nil or ftIndex == wantIndex then
-                    total = total + ((spec.litersPerHour ~= nil and spec.litersPerHour[ftIndex]) or 0) * 24
+        local indices = (e.kind == "milk") and getMilkFillTypeIndices(spec) or (spec.fillTypes or {})
+        for _, ftIndex in ipairs(indices) do
+            if wantIndex == nil or ftIndex == wantIndex then
+                local perDay = ((spec.litersPerHour ~= nil and spec.litersPerHour[ftIndex]) or 0) * 24
+                -- MP-Client: litersPerHour wird nur in onHusbandryAnimalsUpdate
+                -- gefuellt und kann hier noch 0 sein -> aus den Clustern rechnen.
+                if perDay <= 0 and g_server == nil then
+                    perDay = self:estimateDailyFromClusters(e.placeable, e.kind, ftIndex)
                 end
+                total = total + perDay
             end
-        else -- pallets
-            for _, ftIndex in ipairs(spec.fillTypes or {}) do
-                if wantIndex == nil or ftIndex == wantIndex then
-                    total = total + ((spec.litersPerHour ~= nil and spec.litersPerHour[ftIndex]) or 0) * 24
-                end
-            end
+        end
+    end
+    return total
+end
+
+-- Tagesmenge eines Stalls direkt aus den Tier-Clustern, gleiche Formel wie
+-- PlaceableHusbandryMilk/-Pallets:onHusbandryAnimalsUpdate (Kurve je Alter
+-- mal Tierzahl). Nur Fallback fuer MP-Clients.
+function MilkContractManager:estimateDailyFromClusters(placeable, kind, ftIndex)
+    local animalSystem = g_currentMission ~= nil and g_currentMission.animalSystem or nil
+    if placeable == nil or placeable.getClusters == nil or animalSystem == nil
+       or animalSystem.getSubTypeByIndex == nil then
+        return 0
+    end
+    local outKey = (kind == "milk") and "milk" or "pallets"
+    local total = 0
+    for _, c in ipairs(placeable:getClusters() or {}) do
+        local subIdx = c.subTypeIndex or (c.getSubTypeIndex ~= nil and c:getSubTypeIndex()) or nil
+        local subType = subIdx ~= nil and animalSystem:getSubTypeByIndex(subIdx) or nil
+        local out = (subType ~= nil and subType.output ~= nil) and subType.output[outKey] or nil
+        if out ~= nil and out.fillType == ftIndex and out.curve ~= nil and out.curve.get ~= nil then
+            local age = c.age or (c.getAge ~= nil and c:getAge()) or 0
+            local n   = c.numAnimals or (c.getNumAnimals ~= nil and c:getNumAnimals()) or 0
+            total = total + (out.curve:get(age) or 0) * n
         end
     end
     return total
@@ -1075,7 +1113,10 @@ function MilkContractManager:getStoredMilk(farmId, fillTypeName)
     return total
 end
 
-function MilkContractManager:getCurrentMilkMarketPrice(fillTypeName)
+-- Milchpreis des Spiels fuer einen Fuelltyp, oder nil wenn (noch) nicht
+-- verfuegbar. Fuer alles, was einen Preis dauerhaft FIXIERT, nur diese
+-- Variante nutzen - nie den Anzeige-Fallback.
+function MilkContractManager:getMarketPriceOrNil(fillTypeName)
     -- Bestaetigte Quelle (FS25_automaticMilkSale): economyManager:getPricePerLiter.
     local name = fillTypeName or MILK_FILLTYPE
     local ftIndex = g_fillTypeManager ~= nil and g_fillTypeManager:getFillTypeIndexByName(name) or nil
@@ -1084,7 +1125,23 @@ function MilkContractManager:getCurrentMilkMarketPrice(fillTypeName)
         local p = g_currentMission.economyManager:getPricePerLiter(ftIndex)
         if p ~= nil and p > 0 then return p end
     end
-    return 1.0
+    return nil
+end
+
+function MilkContractManager:getCurrentMilkMarketPrice(fillTypeName)
+    return self:getMarketPriceOrNil(fillTypeName) or 1.0
+end
+
+-- Festpreis eines Vertrags fixieren, sobald ein echter Milchpreis vorliegt.
+function MilkContractManager:ensureLockedPrice(contract)
+    if contract == nil or contract.dairy == nil or contract.lockedBasePrice ~= nil
+       or contract.dairy:isMarketPriced() then
+        return
+    end
+    local mp = self:getMarketPriceOrNil(contract.dairy.fillTypeName)
+    if mp ~= nil then
+        contract.lockedBasePrice = contract.dairy:getPricePerLiter(mp)
+    end
 end
 
 function MilkContractManager:addMoney(farmId, amount, isPositive)
@@ -1154,11 +1211,16 @@ function MilkContractManager:restoreFromSavegame()
     xmlFile:iterate("milkContract.contracts.contract", function(_, key)
         local c = MilkContract.loadFromXMLFile(xmlFile, key, self.data.byId)
         if c ~= nil then
-            -- Migration: Festpreis-Vertraege von vor 1.0.0.0-Rebalancing hatten
-            -- einen absoluten EUR-Preis -> auf den relativen Festpreis umstellen.
-            if c.lockedBasePrice == nil and c.dairy ~= nil and not c.dairy:isMarketPriced() then
-                c.lockedBasePrice = c.dairy:getPricePerLiter(self:getCurrentMilkMarketPrice(c.dairy.fillTypeName))
+            -- Migration von Spielstaenden vor dem Preis-Rebalancing
+            -- (pricingVersion < 2): Bonus nach neuer Regel neu berechnen (freie
+            -- Vertraege ohne Laufzeitbonus, 0,5 %/Monat) und Festpreise relativ
+            -- zum Milchpreis neu fixieren.
+            if (c.pricingVersion or 1) < MilkContract.PRICING_VERSION and c.dairy ~= nil then
+                c.priceBonus      = self:getDurationBonus(c.durationMonths, c.dairy)
+                c.lockedBasePrice = nil
+                c.pricingVersion  = MilkContract.PRICING_VERSION
             end
+            self:ensureLockedPrice(c)   -- holt ggf. spaeter nach, falls noch kein Preis da
             local mt = (c.dairy ~= nil and c.dairy.milkType) or "cow"
             self:setContract(c.farmId, mt, c)
             n = n + 1

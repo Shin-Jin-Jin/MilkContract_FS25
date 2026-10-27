@@ -10,6 +10,10 @@ local MilkContract_mt = Class(MilkContract)
 -- Standard-Straffaktor bei Mindestmengen-Vertraegen ohne eigenen Faktor.
 MilkContract.DEFAULT_PENALTY_FACTOR = 1.0
 
+-- Version des Preismodells (2 = relative Preise, Bonus nur mit Verpflichtung).
+-- Aeltere Spielstaende werden beim Laden migriert.
+MilkContract.PRICING_VERSION = 2
+
 -- @param dairy       MilkDairy-Objekt
 -- @param farmId      Farm, die den Vertrag haelt
 -- @param targetLiters berechnete Zielmenge fuer den Vertragszeitraum (0 bei none/maximum)
@@ -32,6 +36,7 @@ function MilkContract.new(dairy, farmId, targetLiters, capPerPeriod)
     self.effHealth      = nil                    -- gewuerfelte Gesundheitsauflage (%) - fixiert
     self.effCalf        = nil                    -- gewuerfelte Kaelber-Haltedauer (Monate) - fixiert
     self.lockedBasePrice = nil                   -- Festpreis je Liter (ohne Bonus), beim Abschluss fixiert
+    self.pricingVersion = MilkContract.PRICING_VERSION
     self.warnedNoSupply = false                  -- Warnung "keine Milch" bereits gezeigt (nicht gespeichert)
 
     -- laufende Zaehler
@@ -287,6 +292,7 @@ function MilkContract:saveToXMLFile(xmlFile, key)
     if self.effYoungShare   ~= nil then xmlFile:setFloat(key .. "#effYoungShare",   self.effYoungShare) end
     if self.effYoungAge     ~= nil then xmlFile:setInt(key   .. "#effYoungAge",     self.effYoungAge) end
     if self.lockedBasePrice ~= nil then xmlFile:setFloat(key .. "#lockedBasePrice", self.lockedBasePrice) end
+    xmlFile:setInt(key .. "#pricingVersion", self.pricingVersion or MilkContract.PRICING_VERSION)
     xmlFile:setFloat(key .. "#youngSum",   self.youngSum or 0)
     xmlFile:setInt(key   .. "#youngCount", self.youngCount or 0)
 end
@@ -338,8 +344,8 @@ function MilkContract.loadFromXMLFile(xmlFile, key, dairyById)
     c.youngSum            = xmlFile:getFloat(key .. "#youngSum") or 0
     c.youngCount          = xmlFile:getInt(key   .. "#youngCount") or 0
     c.lockedBasePrice     = xmlFile:getFloat(key .. "#lockedBasePrice")
-    -- Hinweis: Festpreis-Vertraege aus aelteren Versionen (absoluter EUR-Preis,
-    -- ohne lockedBasePrice) werden vom Manager nach dem Laden auf den neuen,
-    -- relativen Festpreis umgestellt (siehe restoreFromSavegame).
+    -- fehlt bei Spielstaenden vor dem Preis-Rebalancing -> Version 1; der
+    -- Manager migriert diese Vertraege nach dem Laden (restoreFromSavegame).
+    c.pricingVersion      = xmlFile:getInt(key .. "#pricingVersion") or 1
     return c
 end

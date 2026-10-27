@@ -57,6 +57,12 @@ function MilkContractSyncEvent:run(connection)
         g_milkContractManager:applySyncEntries(self.entries)
         g_milkContractManager:rebuildOffer()
     end
+    -- Offene Menueseite sofort aktualisieren (sonst zeigt der Client bis zum
+    -- naechsten Oeffnen den alten Stand, z.B. noch den "Verlaengern"-Knopf).
+    local page = InGameMenuMilkContract ~= nil and InGameMenuMilkContract.page or nil
+    if page ~= nil and page.getIsVisible ~= nil and page:getIsVisible() then
+        page:refresh()
+    end
 end
 
 function MilkContractSyncEvent.sendToClients()
@@ -160,7 +166,14 @@ function MilkContractActionEvent:run(connection)
     elseif self.actionType == MilkContractActionEvent.EXTEND then
         g_milkContractManager:doExtend(self.farmId, mt)
     else
-        g_milkContractManager:doSign(self.dairyId, self.farmId)
+        -- Abschluss abgelehnt (z.B. Stall gibt keine Milch) -> dem anfragenden
+        -- Client den Grund schicken, damit er einen Hinweis anzeigen kann.
+        local reason = g_milkContractManager:getSignBlockReason(self.dairyId, self.farmId)
+        if reason == nil then
+            g_milkContractManager:doSign(self.dairyId, self.farmId)
+        elseif connection ~= nil and connection.sendEvent ~= nil and MilkContractSignResultEvent ~= nil then
+            connection:sendEvent(MilkContractSignResultEvent.new(self.dairyId, reason))
+        end
     end
     MilkContractSyncEvent.sendToClients()
 end
@@ -203,5 +216,47 @@ function MilkContractNotifyEvent:run(connection)
     if g_server ~= nil then return end
     if g_milkContractManager ~= nil then
         g_milkContractManager:notify(self.text)
+    end
+end
+
+
+-- ============================================================================
+-- SignResultEvent: Server -> anfragender Client (Abschluss abgelehnt + Grund).
+-- Der Text wird am Client in dessen Sprache aufgebaut.
+-- ============================================================================
+MilkContractSignResultEvent = {}
+local MilkContractSignResultEvent_mt = Class(MilkContractSignResultEvent, Event)
+InitEventClass(MilkContractSignResultEvent, "MilkContractSignResultEvent")
+
+function MilkContractSignResultEvent.emptyNew()
+    return Event.new(MilkContractSignResultEvent_mt)
+end
+
+function MilkContractSignResultEvent.new(dairyId, reason)
+    local self = MilkContractSignResultEvent.emptyNew()
+    self.dairyId = dairyId or ""
+    self.reason  = reason or "unknown"
+    return self
+end
+
+function MilkContractSignResultEvent:writeStream(streamId, connection)
+    streamWriteString(streamId, self.dairyId or "")
+    streamWriteString(streamId, self.reason or "unknown")
+end
+
+function MilkContractSignResultEvent:readStream(streamId, connection)
+    self.dairyId = streamReadString(streamId)
+    self.reason  = streamReadString(streamId)
+    self:run(connection)
+end
+
+function MilkContractSignResultEvent:run(connection)
+    if g_server ~= nil or g_milkContractManager == nil or g_milkContractManager.data == nil then return end
+    local dairy = g_milkContractManager.data.byId[self.dairyId]
+    local page = InGameMenuMilkContract ~= nil and InGameMenuMilkContract.page or nil
+    if dairy ~= nil and page ~= nil and page.showSignBlocked ~= nil then
+        page:showSignBlocked(self.reason, dairy)
+    else
+        g_milkContractManager:notify(g_i18n:getText("mc_signFailed"))
     end
 end

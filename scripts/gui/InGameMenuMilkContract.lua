@@ -48,6 +48,7 @@ function InGameMenuMilkContract:setup()
 
     local page = MilkContractFrame.new(g_i18n, g_messageCenter)
     g_gui:loadGui(self.dir .. "gui/MilkContractFrame.xml", "MilkContractFrame", page, true)
+    InGameMenuMilkContract.page = page   -- fuer Refresh nach MP-Sync / Ablehnungs-Hinweis
 
     self.fixInGameMenu(page, "MilkContractFrame", InGameMenuMilkContract.ICON_UVS, 2, nil)
 
