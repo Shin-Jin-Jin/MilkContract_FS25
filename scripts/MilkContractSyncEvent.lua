@@ -17,7 +17,7 @@ end
 
 function MilkContractSyncEvent.new(entries, offerSeed)
     local self = MilkContractSyncEvent.emptyNew()
-    self.entries   = entries or {}   -- Liste aus { farmId=, dairyId= }
+    self.entries   = entries or {}   -- Server: { farmId=, milkType=, contract= }
     self.offerSeed = offerSeed or 1
     return self
 end
@@ -29,9 +29,8 @@ function MilkContractSyncEvent:writeStream(streamId, connection)
     streamWriteUInt8(streamId, count)
     for i = 1, count do
         local e = entries[i]
-        streamWriteInt32(streamId, e.farmId or 0)
-        streamWriteString(streamId, e.dairyId or "")
         streamWriteString(streamId, e.milkType or "cow")
+        e.contract:writeStream(streamId)
     end
 end
 
@@ -41,9 +40,8 @@ function MilkContractSyncEvent:readStream(streamId, connection)
     self.entries = {}
     for i = 1, count do
         local e = {}
-        e.farmId   = streamReadInt32(streamId)
-        e.dairyId  = streamReadString(streamId)
         e.milkType = streamReadString(streamId)
+        e.data     = MilkContract.readStreamData(streamId)   -- liest immer alle Felder
         self.entries[i] = e
     end
     self:run(connection)

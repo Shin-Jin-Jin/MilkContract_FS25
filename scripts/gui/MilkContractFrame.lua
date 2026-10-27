@@ -85,6 +85,10 @@ function MilkContractFrame:onGuiSetupFinished()
     self.detailReq      = self:getDescendantById("detailReq")
     self.detailStatus   = self:getDescendantById("detailStatus")
     self.detailEstimate = self:getDescendantById("detailEstimate")
+    if self.detailStatus ~= nil and type(self.detailStatus.textColor) == "table" then
+        -- Standardfarbe merken, um nach einer Warnung zurueckzuschalten
+        self.detailStatusDefaultColor = { unpack(self.detailStatus.textColor) }
+    end
     self.groupDetail = {}
     for _, id in ipairs({ "lblPrice","detailPrice","lblQuota","detailQuota",
                           "lblPayout","detailPayout","lblPenalty","detailPenalty",
@@ -201,8 +205,12 @@ function MilkContractFrame:onClickExtend()
         text = string.format(self.i18n:getText("mc_extendConfirmDebt"),
             self:resolveTitle(active.dairy.title, active.dairyId),
             g_i18n:formatNumber(carry, 0))
-    else
+    elseif g_milkContractManager:hasObligation(active.dairy) then
         text = string.format(self.i18n:getText("mc_extendConfirm"),
+            self:resolveTitle(active.dairy.title, active.dairyId))
+    else
+        -- freier Vertrag: gleiche Konditionen, kein Treuebonus
+        text = string.format(self.i18n:getText("mc_extendConfirmFree"),
             self:resolveTitle(active.dairy.title, active.dairyId))
     end
     text = text:gsub("\\n", "\n")
@@ -297,16 +305,44 @@ end
 
 -- ===== Anzeige-Helfer =====
 
+-- Literpreis des Angebots in EUR (inkl. Laufzeitbonus), damit alle Molkereien
+-- direkt vergleichbar sind. Marktgekoppelte Preise bekommen ein "~" davor,
+-- weil sie sich mit dem Milchpreis noch aendern koennen.
 function MilkContractFrame:priceStr(dairy)
-    local bonus = 1.0
-    if g_milkContractManager ~= nil then
-        bonus = g_milkContractManager:getDurationBonus(g_milkContractManager:getOfferDuration(dairy.id))
-    end
+    if g_milkContractManager == nil then return "-" end
+    local s = g_i18n:formatMoney(g_milkContractManager:getOfferPricePerLiter(dairy), 2, true) .. " / l"
     if dairy:isMarketPriced() then
-        return string.format("%s (x%.2f)", self.i18n:getText("mc_market"),
-            (dairy.pricing.marketMultiplier or 1.0) * bonus)
+        s = "~" .. s
     end
-    return g_i18n:formatMoney((dairy.pricing.pricePerLiter or 0) * bonus, 2, true) .. " / l"
+    return s
+end
+
+-- Ausfuehrliche Preiszeile fuers Detailpanel: Preis + Art (fest / Markt).
+function MilkContractFrame:priceDetailStr(dairy)
+    local key = dairy:isMarketPriced() and "mc_priceKindMarket" or "mc_priceKindFixed"
+    return string.format("%s  (%s)", self:priceStr(dairy), self.i18n:getText(key))
+end
+
+-- Warnung als Dialog anzeigen (gut sichtbar, auch direkt nach dem Klick).
+function MilkContractFrame:showWarning(text)
+    if text == nil then return end
+    text = text:gsub("\\n", "\n")
+    if InfoDialog ~= nil and InfoDialog.show ~= nil then
+        InfoDialog.show(text)
+    elseif g_currentMission ~= nil and g_currentMission.showBlinkingWarning ~= nil then
+        g_currentMission:showBlinkingWarning(text, 5000)
+    end
+end
+
+-- Kurztext + Dialogtext fuer einen fehlenden/leeren Stall.
+function MilkContractFrame:getBarnWarning(status, dairy)
+    local milkName = self.i18n:getText("mc_milkName_" .. tostring(dairy.milkType or "cow"))
+    if status == "none" then
+        return self.i18n:getText("mc_noBarn"),
+               string.format(self.i18n:getText("mc_noBarnDialog"), milkName)
+    end
+    return self.i18n:getText("mc_noProduction"),
+           string.format(self.i18n:getText("mc_noProductionDialog"), milkName)
 end
 
 function MilkContractFrame:quotaStr(dairy)
@@ -396,7 +432,7 @@ function MilkContractFrame:fillDairyDetail(dairy, farmId)
     if self.detailTitle ~= nil then
         self.detailTitle:setText(self:resolveTitle(dairy.title, dairy.id))
     end
-    if self.detailPrice ~= nil then self.detailPrice:setText(self:priceStr(dairy)) end
+    if self.detailPrice ~= nil then self.detailPrice:setText(self:priceDetailStr(dairy)) end
     if self.detailQuota ~= nil then self.detailQuota:setText(self:quotaStr(dairy)) end
     if self.detailPayout ~= nil then
         local months = g_milkContractManager:getOfferDuration(dairy.id)
@@ -408,13 +444,20 @@ function MilkContractFrame:fillDairyDetail(dairy, farmId)
     if self.detailReq ~= nil then self.detailReq:setText(self:reqStrMultiline(dairy)) end
     if self.detailPenalty ~= nil then self.detailPenalty:setText(self:penaltyStr(dairy)) end
     if self.detailStatus ~= nil then
-        -- Fehlt der passende Stall, direkt auf der Seite warnen (statt nur per
-        -- HUD-Hinweis beim Klick, der auf einer anderen Menueseite erscheint).
-        if g_milkContractManager ~= nil
-           and not g_milkContractManager:hasMatchingBarn(farmId, dairy.fillTypeName) then
-            self.detailStatus:setText(self.i18n:getText("mc_noBarn"))
+        -- Fehlt ein passender (milchgebender) Stall, schon hier warnen - der
+        -- Klick auf "Vertrag abschliessen" zeigt zusaetzlich einen Dialog.
+        local status = g_milkContractManager:getBarnStatus(farmId, dairy.fillTypeName)
+        if status ~= "ok" then
+            local short = self:getBarnWarning(status, dairy)
+            self.detailStatus:setText(short)
+            if self.detailStatus.setTextColor ~= nil then
+                self.detailStatus:setTextColor(1, 0.35, 0.2, 1)   -- Warnfarbe
+            end
         else
             self.detailStatus:setText(self.i18n:getText("mc_noContract"))
+            if self.detailStatus.setTextColor ~= nil and self.detailStatusDefaultColor ~= nil then
+                self.detailStatus:setTextColor(unpack(self.detailStatusDefaultColor))
+            end
         end
     end
     if self.detailEstimate ~= nil then
@@ -551,17 +594,19 @@ function MilkContractFrame:onClickSign()
     local mt = dairy.milkType or "cow"
     if g_milkContractManager:getContract(farmId, mt) ~= nil then return end
 
-    -- Kein passender Stall -> Hinweis steht bereits im Detailpanel (detailStatus);
-    -- hier nur still abbrechen und die Seite aktualisieren, damit der Hinweis sicher sichtbar ist.
-    if not g_milkContractManager:hasMatchingBarn(farmId, dairy.fillTypeName) then
+    -- Kein Stall bzw. keine Milchproduktion fuer diese Sorte -> deutlich warnen
+    -- (Dialog) statt still abzubrechen; Detailpanel zeigt den Hinweis ebenfalls.
+    local barnStatus = g_milkContractManager:getBarnStatus(farmId, dairy.fillTypeName)
+    if barnStatus ~= "ok" then
+        local _, dialogText = self:getBarnWarning(barnStatus, dairy)
         self:updateDetail()
+        self:showWarning(dialogText)
         return
     end
 
     -- Eckdaten fuer die Bestaetigung zusammenstellen
     local months = g_milkContractManager:getOfferDuration(dairy.id)
-    local bonus  = g_milkContractManager:getDurationBonus(months)
-    local price  = dairy:getPricePerLiter(g_milkContractManager:getCurrentMilkMarketPrice(dairy.fillTypeName)) * bonus
+    local price  = g_milkContractManager:getOfferPricePerLiter(dairy)
     local target = select(1, g_milkContractManager:computeContractNumbers(dairy, farmId, months))
 
     local text = string.format(self.i18n:getText("mc_signConfirm"),

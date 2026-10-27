@@ -30,11 +30,27 @@ function MilkDairy:needsCalfHook()    return self.requirements.minCalfAgeMonths 
 function MilkDairy:needsYoungCheck()  return self.requirements.minYoungSharePercent ~= nil end
 
 -- Effektiver Preis pro Liter fuer eine gegebene Marktreferenz ----------------
+-- Beide Preisarten sind relativ zum Milchpreis des Spiels, damit sie mit
+-- Fuelltyp und Wirtschafts-Schwierigkeitsgrad mitskalieren:
+--   market: aktueller Milchpreis x marketMultiplier (folgt dem Markt)
+--   fixed : Milchpreis x factor, wird beim Abschluss im Vertrag fixiert
+-- Ein absoluter pricePerLiter (alte Datenformate) wird weiter unterstuetzt.
 function MilkDairy:getPricePerLiter(currentMarketPrice)
+    local market = currentMarketPrice or 0
     if self.pricing.type == "market" then
-        return currentMarketPrice * (self.pricing.marketMultiplier or 1.0)
+        return market * (self.pricing.marketMultiplier or 1.0)
+    end
+    if self.pricing.factor ~= nil then
+        return market * self.pricing.factor
     end
     return self.pricing.pricePerLiter or 0
+end
+
+-- Preisfaktor relativ zum Milchpreis (fuer Anzeige/Vergleich), nil bei
+-- absolutem Altformat.
+function MilkDairy:getPriceFactor()
+    if self.pricing.type == "market" then return self.pricing.marketMultiplier or 1.0 end
+    return self.pricing.factor
 end
 
 -- Plausibilitaetspruefung. true, wenn der Eintrag brauchbar ist. -------------
@@ -46,8 +62,10 @@ function MilkDairy:validate()
     end
 
     if self.pricing.type == "fixed" then
-        if self.pricing.pricePerLiter == nil or self.pricing.pricePerLiter <= 0 then
-            warn("type='fixed' braucht ein gueltiges pricePerLiter > 0")
+        local f = self.pricing.factor
+        local p = self.pricing.pricePerLiter
+        if (f == nil or f <= 0) and (p == nil or p <= 0) then
+            warn("type='fixed' braucht factor > 0 (oder ein absolutes pricePerLiter > 0)")
         end
     elseif self.pricing.type == "market" then
         if self.pricing.pricePerLiter ~= nil then

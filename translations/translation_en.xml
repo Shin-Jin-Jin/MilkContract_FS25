@@ -4,15 +4,15 @@
         <text name="dairy_coop_title"        text="Cooperative"/>
         <text name="dairy_coop_desc"         text="Safe default: market price, no commitment, no risk."/>
         <text name="dairy_nordmilch_title"   text="Nordmilch Plant"/>
-        <text name="dairy_nordmilch_desc"    text="Volume: guaranteed fixed price, but a high quota (~85%)."/>
+        <text name="dairy_nordmilch_desc"    text="Volume buyer: solid fixed price for a high quota (~85%)."/>
         <text name="dairy_marktkontor_title" text="Market Trader"/>
-        <text name="dairy_marktkontor_desc"  text="Speculator: market +15%, no obligation, income fluctuates."/>
+        <text name="dairy_marktkontor_desc"  text="Trader: market price +5%, no obligation."/>
         <text name="dairy_bioland_title"     text="BioLand Dairy"/>
         <text name="dairy_bioland_desc"      text="Organic: high fixed price requiring herd health of 80%+."/>
         <text name="dairy_weidehof_title"    text="Weidehof Manufactory"/>
-        <text name="dairy_weidehof_desc"     text="Premium/welfare: highest price, health 85%+ and calf-keeping rule."/>
+        <text name="dairy_weidehof_desc"     text="Premium/welfare: very high price, health 85%+ and a share of young animals."/>
         <text name="dairy_klein_title"       text="Klein Farm Dairy"/>
-        <text name="dairy_klein_desc"        text="Regional: very high price, but a limited purchase cap."/>
+        <text name="dairy_klein_desc"        text="Regional: good fixed price, but a limited purchase cap."/>
 
         <text name="mc_pageTitle"    text="Milk Contract"/>
         <text name="mc_colDairy"     text="Dairy"/>
@@ -69,7 +69,7 @@
         <text name="dairy_discount_title" text="Discount Dairy"/>
         <text name="dairy_discount_desc" text="Low fixed price, but fully flexible with no requirements."/>
         <text name="dairy_weltmarkt_title" text="World Market Export"/>
-        <text name="dairy_weltmarkt_desc" text="Strongly market-linked (+25%): high reward, high risk."/>
+        <text name="dairy_weltmarkt_desc" text="Export: best of the no-obligation prices (market +6%), quarterly payout."/>
         <text name="dairy_demeter_title" text="Demeter Farm"/>
         <text name="dairy_demeter_desc" text="Premium: top price, but strictest welfare requirements, long term."/>
         <text name="mc_notifyPayout" text="Milk contract: %s paid out (%s)"/>
@@ -77,9 +77,9 @@
         <text name="mc_notifyExpiring" text="Milk contract with %s expiring soon - renew in the menu"/>
         <text name="mc_notifyExtended" text="Milk contract with %s renewed"/>
         <text name="dairy_ziegenhof_title" text="Creekside Goat Farm"/>
-        <text name="dairy_ziegenhof_desc" text="Small goat farm: good fixed price, monthly, short term, no requirements."/>
+        <text name="dairy_ziegenhof_desc" text="Small goat farm: market price, monthly, short term, no requirements."/>
         <text name="dairy_ziegenkaeserei_title" text="Bergblick Goat Cheesery"/>
-        <text name="dairy_ziegenkaeserei_desc" text="Goat-milk cheesery: high fixed price, but minimum quota and medium term."/>
+        <text name="dairy_ziegenkaeserei_desc" text="Goat-milk cheesery: good premium for a minimum quota, medium term."/>
         <text name="dairy_ziegen_biohof_title" text="Sonnenwiese Organic Goat Farm"/>
         <text name="dairy_ziegen_biohof_desc" text="Premium goat milk: top price, long term and a welfare requirement."/>
         <text name="mc_toggleType" text="Cow/Goat"/>
@@ -103,19 +103,19 @@
         <text name="dairy_ziegen_feinkaese_title" text="Alpengold Fine Cheesery"/>
         <text name="dairy_ziegen_feinkaese_desc" text="Premium goat cheeses: high premium, but high quota and longer term."/>
         <text name="dairy_ziegen_kosmetik_title" text="Goat-Milk Natural Cosmetics"/>
-        <text name="dairy_ziegen_kosmetik_desc" text="Cosmetics maker: top premium, yearly payout, welfare requirement."/>
+        <text name="dairy_ziegen_kosmetik_desc" text="Cosmetics maker: high premium, yearly payout, welfare requirement."/>
         <text name="dairy_ziegen_hofladen_title" text="Goat Farm Shop"/>
         <text name="dairy_ziegen_hofladen_desc" text="Farm-gate sales: flexible, monthly, short term, no requirements."/>
         <text name="dairy_ziegen_regional_title" text="Regional Goat Dairy"/>
         <text name="dairy_ziegen_regional_desc" text="Regional bulk buyer: small premium, but high quota, monthly."/>
         <text name="dairy_ziegen_export_title" text="Goat-Milk Export"/>
-        <text name="dairy_ziegen_export_desc" text="Strongly market-linked: high reward, high risk, no quota."/>
+        <text name="dairy_ziegen_export_desc" text="Export: best of the no-obligation prices, quarterly, no quota."/>
         <text name="dairy_ziegen_frischkaese_title" text="Hillside Fresh Cheesery"/>
         <text name="dairy_ziegen_frischkaese_desc" text="Fresh cheese: good premium, monthly payout, medium quota."/>
         <text name="dairy_ziegen_demeter_title" text="Demeter Goat Farm"/>
-        <text name="dairy_ziegen_demeter_desc" text="Premium organic: top premium, long term, strict welfare requirement."/>
+        <text name="dairy_ziegen_demeter_desc" text="Premium organic: very high premium, long term, strict welfare requirement."/>
         <text name="dairy_ziegen_gourmet_title" text="Gourmet Goat Delicacies"/>
-        <text name="dairy_ziegen_gourmet_desc" text="Delicatessen maker: highest premium, welfare requirement, medium term."/>
+        <text name="dairy_ziegen_gourmet_desc" text="Delicatessen maker: very high premium, welfare requirement, medium term."/>
         <text name="mc_help_title" text="Milk Contract"/>
         <text name="mc_help_p1_title" text="What is a milk contract?"/>
         <text name="mc_help_p1_text" text="Instead of selling your milk at the fluctuating daily price, you sign a fixed contract with a dairy. While it runs, the dairy collects the agreed milk from your barn automatically every day and pays the contract price. Each dairy has its own character: price, quantity rule, payout rhythm, term and sometimes animal-welfare requirements. You reach the contract menu via its own tab in the game menu."/>
@@ -124,7 +124,7 @@
         <text name="mc_help_p3_title" text="Milk pickup"/>
         <text name="mc_help_p3_text" text="While a contract is active, milk is collected from the barn automatically every day: from the tank for cows, from the produced pallets for goats. You never have to haul it to the dairy yourself. Whatever the dairy does not take - for example above a maximum quota - stays in storage and can still be sold yourself. With no active contract, you sell as usual."/>
         <text name="mc_help_p4_title" text="Price and term"/>
-        <text name="mc_help_p4_text" text="The price is either fixed per liter or market-linked (daily price times a factor, so it moves with the market). Each offer also has a random term between 3 and 24 months. The longer the term, the higher the price bonus - committing longer pays off. Term and bonus price are locked in at signing and then apply for the whole contract."/>
+        <text name="mc_help_p4_text" text="Every price is based on the milk price of your game, so contracts scale with the economy difficulty. Fixed-price dairies lock their price per liter when you sign; market-linked dairies (marked with ~) follow the milk price. The more a dairy demands, the more it pays: no-obligation contracts pay the least, then maximum-cap contracts, then minimum quotas, then quotas with a herd-health requirement, and the welfare dairies with an additional young-animal share pay the most. Each offer has a random term between 3 and 24 months. Contracts with obligations earn a term bonus of 0.5% per month above 3 months (up to +10.5%); no-obligation contracts can be cancelled for free at any time and therefore get no term bonus."/>
         <text name="mc_help_p5_title" text="Payout"/>
         <text name="mc_help_p5_text" text="Money accrues and is paid out on the agreed rhythm: monthly, quarterly, half-yearly or yearly. The rhythm counts from the contract start, not from the calendar year. At contract end the remaining balance is always paid out. A short message informs you of each payout."/>
         <text name="mc_help_p6_title" text="Offers"/>
@@ -134,36 +134,47 @@
         <text name="mc_help_p8_title" text="Contract penalty"/>
         <text name="mc_help_p8_text" text="If you commit to a minimum quota and fail to deliver it by contract end, a penalty applies to the shortfall (shortfall times price times factor). This penalty is shown as its own item in the detail view already at signing, so you know in advance what you are getting into. Contracts without a minimum quota have no such penalty."/>
         <text name="mc_help_p9_title" text="Renew and carry over"/>
-        <text name="mc_help_p9_text" text="In the last month before expiry you are warned and can renew the contract - on the old terms plus a small loyalty bonus on the price. If you did not fully meet a minimum quota, renewing carries the shortfall over into the next year as a redelivery (instead of a cash penalty): the new target is the normal target plus the outstanding amount. If instead you let the contract lapse, the normal penalty applies."/>
+        <text name="mc_help_p9_text" text="In the last month before expiry you are warned and can renew the contract on the old terms. Contracts with obligations also receive a small loyalty bonus on the price. If you did not fully meet a minimum quota, renewing carries the shortfall over into the next year as a redelivery (instead of a cash penalty): the new target is the normal target plus the outstanding amount. If instead you let the contract lapse, the normal penalty applies."/>
         <text name="mc_help_p10_title" text="Early cancellation"/>
-        <text name="mc_help_p10_text" text="You can cancel an active contract early at any time. A termination fee applies, based on the contract's remaining open value (remaining value times 1.2). Before cancelling, the game asks you in a dialog whether you really want to proceed at the stated fee. This lets you get out of a contract when needed, but at an extra cost."/>
+        <text name="mc_help_p10_text" text="You can cancel an active contract early at any time. Contracts with obligations charge a termination fee based on the contract's remaining open value (remaining value times 1.2); no-obligation contracts can be cancelled free of charge. Before cancelling, the game asks you in a dialog whether you really want to proceed at the stated fee."/>
         <text name="dairy_bueffelhof_title" text="Riverside Buffalo Farm"/>
         <text name="dairy_bueffelhof_desc" text="Direct sales: flexible, monthly, short term, no requirements."/>
         <text name="dairy_bueffel_mozzarella_title" text="Mozzarella Workshop"/>
-        <text name="dairy_bueffel_mozzarella_desc" text="Fresh mozzarella: high premium, half-yearly, medium term."/>
+        <text name="dairy_bueffel_mozzarella_desc" text="Fresh mozzarella: good premium, half-yearly, medium term."/>
         <text name="dairy_bueffel_feinkaese_title" text="Buffalo Fine Cheesery"/>
         <text name="dairy_bueffel_feinkaese_desc" text="Premium buffalo cheeses: high premium, high quota, longer term."/>
         <text name="dairy_bueffel_delikatess_title" text="Delicatessen Dairy"/>
-        <text name="dairy_bueffel_delikatess_desc" text="Delicacies: top premium, long term, welfare requirement."/>
+        <text name="dairy_bueffel_delikatess_desc" text="Delicacies: very high premium, long term, welfare requirement."/>
         <text name="dairy_bueffel_hofladen_title" text="Buffalo Farm Shop"/>
         <text name="dairy_bueffel_hofladen_desc" text="Farm-gate sales: flexible, monthly, no requirements."/>
         <text name="dairy_bueffel_regional_title" text="Regional Buffalo Dairy"/>
         <text name="dairy_bueffel_regional_desc" text="Regional bulk buyer: small premium, high quota, monthly."/>
         <text name="dairy_bueffel_export_title" text="Buffalo-Milk Export"/>
-        <text name="dairy_bueffel_export_desc" text="Strongly market-linked: high reward, high risk, no quota."/>
+        <text name="dairy_bueffel_export_desc" text="Export: best of the no-obligation prices, quarterly, no quota."/>
         <text name="dairy_bueffel_ricotta_title" text="Ricotta Cheesery"/>
         <text name="dairy_bueffel_ricotta_desc" text="Fresh cheese: good premium, monthly payout, medium quota."/>
         <text name="dairy_bueffel_gelateria_title" text="Buffalo Gelateria"/>
-        <text name="dairy_bueffel_gelateria_desc" text="Ice cream from buffalo milk: high premium, quarterly."/>
+        <text name="dairy_bueffel_gelateria_desc" text="Ice cream from buffalo milk: solid premium, quarterly."/>
         <text name="dairy_bueffel_bio_title" text="Organic Buffalo Farm"/>
         <text name="dairy_bueffel_bio_desc" text="Premium organic: top premium, long term, strict welfare requirement."/>
         <text name="dairy_bueffel_gourmet_title" text="Gourmet Buffalo Delicacies"/>
-        <text name="dairy_bueffel_gourmet_desc" text="Delicatessen maker: highest premium, welfare requirement."/>
+        <text name="dairy_bueffel_gourmet_desc" text="Delicatessen maker: very high premium, welfare requirement."/>
         <text name="dairy_bueffel_kaeserei_sued_title" text="South Buffalo Cheesery"/>
         <text name="dairy_bueffel_kaeserei_sued_desc" text="Cheesery: solid premium, half-yearly payout."/>
         <text name="mc_typeBuffalo"  text="Buffalo"/>
         <text name="mc_reqYoung" text="young >= %d%% (under %d M)"/>
         <text name="mc_reqYoungTag" text="young"/>
         <text name="mc_noBarn" text="You own no barn for this milk type."/>
+        <text name="mc_priceKindFixed" text="fixed"/>
+        <text name="mc_priceKindMarket" text="market-linked"/>
+        <text name="mc_noProduction" text="Your barns produce no milk yet."/>
+        <text name="mc_noBarnDialog" text="You cannot sign this contract: you do not own a barn that produces %s.\n\nBuy or build a matching barn with milk-giving animals first."/>
+        <text name="mc_noProductionDialog" text="You cannot sign this contract yet: your barns currently produce no %s.\n\nOnly adult, milk-giving animals produce milk. Add some to the barn and try again."/>
+        <text name="mc_milkName_cow" text="cow milk"/>
+        <text name="mc_milkName_goat" text="goat milk"/>
+        <text name="mc_milkName_buffalo" text="buffalo milk"/>
+        <text name="mc_notifyNoBarn" text="Milk contract with %s: no matching barn found - no milk can be collected!"/>
+        <text name="mc_notifyNoProduction" text="Milk contract with %s: your barns currently produce no milk - nothing to collect!"/>
+        <text name="mc_extendConfirmFree" text="Renew the contract with %s?\nSame terms (no-obligation contracts get no loyalty bonus)."/>
     </texts>
 </l10n>

@@ -10,7 +10,8 @@ Works for **cow milk** and **buffalo milk** (barn tank) and **goat milk** (palle
 - Fixed prices, minimum or maximum quotas, and four payout intervals (monthly / quarterly / half-yearly / yearly)
 - Daily automatic pickup straight from the barn storage; surplus stays in storage for you to sell yourself
 - Rotating offers, freshly assembled every year (base dairy + random selection per milk type)
-- Random contract durations (3–24 months) with a price bonus for longer commitment
+- Random contract durations (3–24 months) with a price bonus for longer commitment (contracts with obligations)
+- Strict price ladder: the more a dairy demands, the more it pays — all prices scale with the game's milk price
 - Timely notice before a contract ends, plus renewal on the old terms with a loyalty bonus
 - Support for **cow, goat AND buffalo milk** — tank for cow/buffalo, spawned pallets for goat
 - Cow/goat/buffalo switch in the menu (native page selector); a separate contract per milk type
@@ -27,64 +28,65 @@ Works for **cow milk** and **buffalo milk** (barn tank) and **goat milk** (palle
 
 ### Cow milk
 
-| Dairy | Price / liter | Quantity | Payout | Term | Requirements |
-|---|---|---|---|---|---|
-| Cooperative | Market x1.0 | free | monthly | 6 M | - |
-| Nordmilch Plant | 1.05/l | min 85% (±10) | half-yearly | 12 M | - |
-| Market Trader | Market x1.15 | free | monthly | 6 M | - |
-| BioLand Dairy | 1.55/l | min 60% (±12) | yearly | 24 M | health >=80% |
-| Weidehof Manufactory | 1.84/l | min 50% (±10) | yearly | 24 M | health >=85%, calves >=12M |
-| Klein Farm Dairy | 1.90/l | max 4000 l/mo (±800) | monthly | 12 M | - |
-| Alpine Dairy Co-op | Market x1.05 | free | quarterly | 12 M | - |
-| FreshLogistics Inc. | 1.10/l | min 70% (±15) | monthly | 12 M | - |
-| South Cheese Works | 1.45/l | min 55% (±10) | half-yearly | 18 M | - |
-| Discount Dairy | 0.95/l | free | monthly | 6 M | - |
-| World Market Export | Market x1.25 | free | quarterly | 12 M | - |
-| Demeter Farm | 1.95/l | min 45% (±8) | yearly | 24 M | health >=90%, calves >=15M |
+| Dairy | Price (× milk price) | Quantity | Payout | Requirements |
+|---|---|---|---|---|
+| Discount Dairy | 0.95× (fixed) | free | monthly | - |
+| Cooperative | 1.00× (market-linked) | free | monthly | - |
+| Alpine Dairy Co-op | 1.03× (market-linked) | free | quarterly | - |
+| Market Trader | 1.05× (market-linked) | free | monthly | - |
+| World Market Export | 1.06× (market-linked) | free | quarterly | - |
+| Klein Farm Dairy | 1.10× (fixed) | max 4000 l/mo (±800) | monthly | - |
+| FreshLogistics Inc. | 1.14× (fixed) | min 70% (±15) | monthly | - |
+| South Cheese Works | 1.16× (fixed) | min 55% (±10) | half-yearly | - |
+| Nordmilch Plant | 1.18× (fixed) | min 85% (±10) | half-yearly | - |
+| BioLand Dairy | 1.32× (fixed) | min 60% (±12) | yearly | health >=80% |
+| Weidehof Manufactory | 1.48× (fixed) | min 50% (±10) | yearly | health >=85%, young >=15% (<12 M) |
+| Demeter Farm | 1.52× (fixed) | min 45% (±8) | yearly | health >=90%, young >=15% (<15 M) |
 
 ### Goat milk
 
-| Dairy | Price / liter | Quantity | Payout | Term | Requirements |
-|---|---|---|---|---|---|
-| Creekside Goat Farm | Market x1.05 | free | monthly | 6 M | - |
-| Bergblick Goat Cheesery | Market x1.20 | min 60% (±12) | half-yearly | 18 M | - |
-| Sonnenwiese Organic Goat Farm | Market x1.35 | min 50% (±10) | yearly | 24 M | health >=85% |
-| Goat-Milk Soap Workshop | Market x1.15 | min 55% | quarterly | 12 M | - |
-| Alpengold Fine Cheesery | Market x1.30 | min 65% (±12) | half-yearly | 18 M | - |
-| Goat-Milk Natural Cosmetics | Market x1.40 | min 50% (±10) | yearly | 12 M | health >=80% |
-| Goat Farm Shop | Market x1.10 | free | monthly | 6 M | - |
-| Regional Goat Dairy | Market x1.08 | min 70% | monthly | 12 M | - |
-| Goat-Milk Export | Market x1.28 | free | quarterly | 12 M | - |
-| Hillside Fresh Cheesery | Market x1.18 | min 60% | monthly | 12 M | - |
-| Demeter Goat Farm | Market x1.45 | min 45% (±8) | yearly | 24 M | health >=90% |
-| Gourmet Goat Delicacies | Market x1.50 | min 40% (±10) | half-yearly | 18 M | health >=85% |
+| Dairy | Price (× milk price) | Quantity | Payout | Requirements |
+|---|---|---|---|---|
+| Creekside Goat Farm | 1.02× (market-linked) | free | monthly | - |
+| Goat Farm Shop | 1.04× (market-linked) | free | monthly | - |
+| Goat-Milk Export | 1.06× (market-linked) | free | quarterly | - |
+| Goat-Milk Soap Workshop | 1.13× (market-linked) | min 55% | quarterly | - |
+| Regional Goat Dairy | 1.14× (market-linked) | min 70% | monthly | - |
+| Hillside Fresh Cheesery | 1.15× (market-linked) | min 60% | monthly | - |
+| Bergblick Goat Cheesery | 1.16× (market-linked) | min 60% (±12) | half-yearly | - |
+| Alpengold Fine Cheesery | 1.18× (market-linked) | min 65% (±12) | half-yearly | - |
+| Goat-Milk Natural Cosmetics | 1.31× (market-linked) | min 50% (±10) | yearly | health >=80% |
+| Gourmet Goat Delicacies | 1.32× (market-linked) | min 40% (±10) | half-yearly | health >=85% |
+| Demeter Goat Farm | 1.33× (market-linked) | min 45% (±8) | yearly | health >=90% |
+| Sonnenwiese Organic Goat Farm | 1.48× (market-linked) | min 50% (±10) | yearly | health >=85%, young >=12% (<10 M) |
 
 ### Buffalo milk
 
-| Dairy | Price / liter | Quantity | Payout | Term | Requirements |
-|---|---|---|---|---|---|
-| Riverside Buffalo Farm | Market x1.05 | free | monthly | 6 M | - |
-| Mozzarella Workshop | Market x1.30 | min 60% (±12) | half-yearly | 18 M | - |
-| Buffalo Fine Cheesery | Market x1.35 | min 65% (±10) | half-yearly | 18 M | - |
-| Delicatessen Dairy | Market x1.45 | min 50% (±10) | yearly | 24 M | health >=85% |
-| Buffalo Farm Shop | Market x1.10 | free | monthly | 6 M | - |
-| Regional Buffalo Dairy | Market x1.08 | min 70% (±10) | monthly | 12 M | - |
-| Buffalo-Milk Export | Market x1.30 | free | quarterly | 12 M | - |
-| Ricotta Cheesery | Market x1.18 | min 55% (±12) | monthly | 12 M | - |
-| Buffalo Gelateria | Market x1.40 | min 50% (±10) | quarterly | 12 M | - |
-| Organic Buffalo Farm | Market x1.45 | min 45% (±8) | yearly | 24 M | health >=90% |
-| Gourmet Buffalo Delicacies | Market x1.50 | min 40% (±10) | half-yearly | 18 M | health >=85% |
-| South Buffalo Cheesery | Market x1.22 | min 60% (±12) | half-yearly | 18 M | - |
+| Dairy | Price (× milk price) | Quantity | Payout | Requirements |
+|---|---|---|---|---|
+| Riverside Buffalo Farm | 1.02× (market-linked) | free | monthly | - |
+| Buffalo Farm Shop | 1.04× (market-linked) | free | monthly | - |
+| Buffalo-Milk Export | 1.06× (market-linked) | free | quarterly | - |
+| Buffalo Gelateria | 1.12× (market-linked) | min 50% (±10) | quarterly | - |
+| Ricotta Cheesery | 1.13× (market-linked) | min 55% (±12) | monthly | - |
+| Regional Buffalo Dairy | 1.14× (market-linked) | min 70% (±10) | monthly | - |
+| Mozzarella Workshop | 1.15× (market-linked) | min 60% (±12) | half-yearly | - |
+| South Buffalo Cheesery | 1.16× (market-linked) | min 60% (±12) | half-yearly | - |
+| Buffalo Fine Cheesery | 1.18× (market-linked) | min 65% (±10) | half-yearly | - |
+| Gourmet Buffalo Delicacies | 1.31× (market-linked) | min 40% (±10) | half-yearly | health >=85% |
+| Delicatessen Dairy | 1.32× (market-linked) | min 50% (±10) | yearly | health >=85% |
+| Organic Buffalo Farm | 1.50× (market-linked) | min 45% (±8) | yearly | health >=90%, young >=12% (<10 M) |
 
-> Market-priced dairies pay the daily market price of that fill type multiplied by the given factor; fixed-price dairies pay a set amount per liter. Displayed prices do not include the duration bonus. Values are defined in `molkereien.xml` and can be edited without touching code.
+> Every price is a factor on the game's own milk price for that fill type, so contracts scale with the economy difficulty. Fixed-price dairies lock their price per liter at signing; market-linked ones follow the milk price. The ladder is strict per milk type: no-obligation < maximum cap < minimum quota < quota + herd health < quota + health + young-animal share. Contracts with obligations get a term bonus of +0.5 % per month above 3 months (max +10.5 % at 24 months); the bands are spaced so the bonus never lets a lower tier overtake a higher one. Terms are rolled per offer (3–24 months). Values live in `molkereien.xml` and can be edited without touching code.
 
 ## How it works
 
-- **Signing** — pick a dairy for the current milk type and confirm. Duration and bonus price are locked in at signing.
+- **Signing** — pick a dairy for the current milk type and confirm. You need a barn that currently produces that milk type; otherwise a dialog explains what is missing. Duration and bonus price (and, for fixed-price dairies, the price per liter) are locked in at signing.
 - **Delivery** — each in-game day the contract takes the agreed milk from the barn (cow: tank; goat: pallets) and credits it at the contract price.
 - **Payout** — accrued money is paid out on the contract-relative rhythm (and always at contract end).
 - **Expiry & renewal** — in the last month you're warned and can renew on the old terms plus a loyalty bonus. If a minimum quota wasn't met, renewing carries the shortfall over as extra target (new target = normal target + carry-over); letting it lapse instead charges the shortfall penalty.
-- **Early cancellation** — possible any time against a termination fee (remaining contract value × 1.2), with a confirmation dialog.
+- **Early cancellation** — possible any time with a confirmation dialog; contracts with obligations charge a termination fee (remaining contract value × 1.2), no-obligation contracts are free to cancel.
+- **Supply warning** — if a running contract's barn is gone or stops producing milk, you get a one-time message.
 
 ## Installation
 
@@ -118,7 +120,7 @@ All dairies and their conditions live in `molkereien.xml` (data-driven). Tunable
 
 ## Version
 
-Mod version 1.0.0.0 · modDesc `descVersion="114"` (FS25)
+Mod version 1.0.0.0 · modDesc `descVersion="115"` (FS25)
 
 ## License / Credits
 

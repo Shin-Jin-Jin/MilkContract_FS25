@@ -31,6 +31,8 @@ function MilkContract.new(dairy, farmId, targetLiters, capPerPeriod)
     self.effQuotaPercent = nil                   -- gewuerfelte Mindestmenge (%) - fixiert
     self.effHealth      = nil                    -- gewuerfelte Gesundheitsauflage (%) - fixiert
     self.effCalf        = nil                    -- gewuerfelte Kaelber-Haltedauer (Monate) - fixiert
+    self.lockedBasePrice = nil                   -- Festpreis je Liter (ohne Bonus), beim Abschluss fixiert
+    self.warnedNoSupply = false                  -- Warnung "keine Milch" bereits gezeigt (nicht gespeichert)
 
     -- laufende Zaehler
     self.deliveredThisPeriod = 0               -- an die Molkerei geliefert (Periode)
@@ -49,8 +51,16 @@ function MilkContract.new(dairy, farmId, targetLiters, capPerPeriod)
 end
 
 -- Effektiven Preis pro Liter ermitteln --------------------------------------
+-- Festpreis-Vertraege nutzen den beim Abschluss fixierten Literpreis,
+-- marktgekoppelte folgen dem aktuellen Milchpreis.
 function MilkContract:getPricePerLiter(currentMarketPrice)
-    return self.dairy:getPricePerLiter(currentMarketPrice) * (self.priceBonus or 1)
+    local base
+    if self.lockedBasePrice ~= nil and not self.dairy:isMarketPriced() then
+        base = self.lockedBasePrice
+    else
+        base = self.dairy:getPricePerLiter(currentMarketPrice)
+    end
+    return base * (self.priceBonus or 1)
 end
 
 -- Aktuellen Ø-Gesundheitswert -----------------------------------------------
@@ -166,6 +176,91 @@ function MilkContract:resetPeriodCounters()
 end
 
 -- --------------------------------------------------------------------------
+--  MP-Sync: kompletter Anzeige-Zustand fuer Clients
+--  (Clients brauchen echte Vertragsobjekte, sonst bricht die Statusanzeige
+--   bei Methodenaufrufen wie getPricePerLiter/meetsHealthRequirement ab.)
+-- --------------------------------------------------------------------------
+local function writeOptFloat(streamId, v)
+    if streamWriteBool(streamId, v ~= nil) then streamWriteFloat32(streamId, v) end
+end
+local function readOptFloat(streamId)
+    if streamReadBool(streamId) then return streamReadFloat32(streamId) end
+    return nil
+end
+
+function MilkContract:writeStream(streamId)
+    streamWriteString(streamId, self.dairyId or "")
+    streamWriteInt32(streamId, self.farmId or 0)
+    streamWriteFloat32(streamId, self.targetLiters or 0)
+    writeOptFloat(streamId, self.capPerPeriod)
+    streamWriteInt32(streamId, self.durationMonths or 12)
+    streamWriteInt32(streamId, self.periodsElapsed or 0)
+    streamWriteFloat32(streamId, self.priceBonus or 1)
+    streamWriteFloat32(streamId, self.carriedDebt or 0)
+    streamWriteFloat32(streamId, self.deliveredThisPeriod or 0)
+    streamWriteFloat32(streamId, self.deliveredTotal or 0)
+    streamWriteFloat32(streamId, self.premiumThisPeriod or 0)
+    streamWriteFloat32(streamId, self.accruedPayout or 0)
+    streamWriteFloat32(streamId, self.healthSum or 0)
+    streamWriteInt32(streamId, self.healthCount or 0)
+    streamWriteFloat32(streamId, self.youngSum or 0)
+    streamWriteInt32(streamId, self.youngCount or 0)
+    writeOptFloat(streamId, self.effQuotaPercent)
+    writeOptFloat(streamId, self.effHealth)
+    writeOptFloat(streamId, self.effCalf)
+    writeOptFloat(streamId, self.effYoungShare)
+    writeOptFloat(streamId, self.effYoungAge)
+    writeOptFloat(streamId, self.lockedBasePrice)
+end
+
+-- Liest IMMER alle Felder (auch wenn der Client die Molkerei nicht kennt),
+-- damit der Stream synchron bleibt. Gibt eine reine Datentabelle zurueck.
+function MilkContract.readStreamData(streamId)
+    local d = {}
+    d.dairyId             = streamReadString(streamId)
+    d.farmId              = streamReadInt32(streamId)
+    d.targetLiters        = streamReadFloat32(streamId)
+    d.capPerPeriod        = readOptFloat(streamId)
+    d.durationMonths      = streamReadInt32(streamId)
+    d.periodsElapsed      = streamReadInt32(streamId)
+    d.priceBonus          = streamReadFloat32(streamId)
+    d.carriedDebt         = streamReadFloat32(streamId)
+    d.deliveredThisPeriod = streamReadFloat32(streamId)
+    d.deliveredTotal      = streamReadFloat32(streamId)
+    d.premiumThisPeriod   = streamReadFloat32(streamId)
+    d.accruedPayout       = streamReadFloat32(streamId)
+    d.healthSum           = streamReadFloat32(streamId)
+    d.healthCount         = streamReadInt32(streamId)
+    d.youngSum            = streamReadFloat32(streamId)
+    d.youngCount          = streamReadInt32(streamId)
+    d.effQuotaPercent     = readOptFloat(streamId)
+    d.effHealth           = readOptFloat(streamId)
+    d.effCalf             = readOptFloat(streamId)
+    d.effYoungShare       = readOptFloat(streamId)
+    d.effYoungAge         = readOptFloat(streamId)
+    d.lockedBasePrice     = readOptFloat(streamId)
+    return d
+end
+
+-- Baut aus den Sync-Daten ein vollwertiges Vertragsobjekt (Client-Seite).
+function MilkContract.fromSyncData(d, dairyById)
+    local dairy = dairyById ~= nil and dairyById[d.dairyId] or nil
+    if dairy == nil then return nil end
+    local c = MilkContract.new(dairy, d.farmId, d.targetLiters, d.capPerPeriod)
+    for _, k in ipairs({ "durationMonths", "periodsElapsed", "priceBonus", "carriedDebt",
+                         "deliveredThisPeriod", "deliveredTotal", "premiumThisPeriod",
+                         "accruedPayout", "healthSum", "healthCount", "youngSum", "youngCount",
+                         "effQuotaPercent", "effHealth", "effCalf", "effYoungShare",
+                         "effYoungAge", "lockedBasePrice" }) do
+        c[k] = d[k]
+    end
+    if c.effCalf ~= nil then c.effCalf = math.floor(c.effCalf + 0.5) end
+    if c.effYoungAge ~= nil then c.effYoungAge = math.floor(c.effYoungAge + 0.5) end
+    return c
+end
+
+
+-- --------------------------------------------------------------------------
 --  Persistenz
 -- --------------------------------------------------------------------------
 function MilkContract:saveToXMLFile(xmlFile, key)
@@ -191,6 +286,7 @@ function MilkContract:saveToXMLFile(xmlFile, key)
     if self.effCalf         ~= nil then xmlFile:setInt(key   .. "#effCalf",         self.effCalf) end
     if self.effYoungShare   ~= nil then xmlFile:setFloat(key .. "#effYoungShare",   self.effYoungShare) end
     if self.effYoungAge     ~= nil then xmlFile:setInt(key   .. "#effYoungAge",     self.effYoungAge) end
+    if self.lockedBasePrice ~= nil then xmlFile:setFloat(key .. "#lockedBasePrice", self.lockedBasePrice) end
     xmlFile:setFloat(key .. "#youngSum",   self.youngSum or 0)
     xmlFile:setInt(key   .. "#youngCount", self.youngCount or 0)
 end
@@ -241,5 +337,9 @@ function MilkContract.loadFromXMLFile(xmlFile, key, dairyById)
     c.effYoungAge         = xmlFile:getInt(key   .. "#effYoungAge")
     c.youngSum            = xmlFile:getFloat(key .. "#youngSum") or 0
     c.youngCount          = xmlFile:getInt(key   .. "#youngCount") or 0
+    c.lockedBasePrice     = xmlFile:getFloat(key .. "#lockedBasePrice")
+    -- Hinweis: Festpreis-Vertraege aus aelteren Versionen (absoluter EUR-Preis,
+    -- ohne lockedBasePrice) werden vom Manager nach dem Laden auf den neuen,
+    -- relativen Festpreis umgestellt (siehe restoreFromSavegame).
     return c
 end

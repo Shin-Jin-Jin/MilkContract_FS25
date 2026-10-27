@@ -51,14 +51,15 @@ function MilkContractTest.status(self)
 
     -- Angebot je Milchtyp
     p("Angebot (Seed %s):", tostring(m.offerSeed))
-    for _, mt in ipairs({ "cow", "goat" }) do
-        p("  [%s]:", mt)
+    for _, mt in ipairs({ "cow", "goat", "buffalo" }) do
+        local ft = (mt == "goat") and FT_GOAT or ((mt == "buffalo") and "BUFFALOMILK" or FT_COW)
+        p("  [%s]  Stall: %s", mt, m:getBarnStatus(farmId, ft))
         for _, d in ipairs(m:getDairies(nil, mt)) do
             local months = m:getOfferDuration(d.id)
-            local bonus  = m:getDurationBonus(months)
-            local price  = d:getPricePerLiter(m:getCurrentMilkMarketPrice(d.fillTypeName)) * bonus
-            p("    - %-26s %.2f EUR/l  %2dM  (%s)",
-                dairyName(m, d), price, months, d.payout)
+            local price  = m:getOfferPricePerLiter(d)
+            p("    - %-26s %.2f EUR/l  (x%.2f, Bonus x%.3f)  %2dM  (%s)",
+                dairyName(m, d), price, d:getPriceFactor() or 0,
+                m:getDurationBonus(months, d), months, d.payout)
         end
     end
 

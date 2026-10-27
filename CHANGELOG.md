@@ -8,6 +8,19 @@ and the project uses Farming Simulator's four-part version numbers.
 
 First public Modhub release.
 
+### Modhub review round 2
+- **Warning when no milk-producing barn exists**: clicking "Sign contract" without a barn for that milk type — or with a barn whose animals currently give no milk — now opens a dialog explaining what is missing, instead of silently doing nothing. The detail panel shows the same hint in a warning colour.
+- **Barn detection no longer depends on `hasMilkProduction`**: tank barns are recognised by the milk fill types they can deliver; actual production is checked via `litersPerHour`. Signing with zero production is blocked (it would have produced a 0 l minimum target).
+- **Supply warning for running contracts**: if the barn is sold/removed or stops producing milk, a one-time message is shown (re-armed once milk flows again).
+- **Price rebalancing**: no-obligation contracts could pay more than contracts with requirements (e.g. World Market Export 2.63 €/l vs. Weidehof Manufactory 2.15 €/l), because fixed prices were absolute € values while market prices scale with the game's milk price/economy difficulty, and every contract got the term bonus. Now:
+  - All prices are factors on the game's milk price; fixed-price dairies lock their € price per liter at signing.
+  - Strict ladder per milk type: no-obligation (0.95–1.06×) < maximum cap (1.10×) < minimum quota (1.12–1.18×) < quota + herd health (1.31–1.33×) < quota + health + young-animal share (1.48–1.52×).
+  - Term bonus (now +0.5 %/month above 3, max +10.5 %) and renewal loyalty bonus apply only to contracts with obligations; the bands are spaced so no term lets a lower tier overtake a higher one.
+  - The menu now shows a concrete €/l price for every dairy (`~` = market-linked), so offers are directly comparable.
+- **Multiplayer**: clients now receive the full contract state (deliveries, payouts, requirements) and get real contract objects, so the menu status and cancel fee work on clients; state is re-synced daily and at every period change.
+- `descVersion` 114 -> 115.
+- Savegames: fixed-price contracts from earlier test versions are migrated to the new relative price on load.
+
 ### Added
 - **In-menu "no matching barn" warning**: selecting a dairy whose milk type you have no barn for now shows the hint directly in the Milk Contract page's detail panel, instead of an easy-to-miss HUD side notification on another page.
 - **Progress line for maximum-cap ("free up to X/month") contracts**: shows the current month's usage against the cap *and* the running total delivered (`0 / 3,862 l (0 %) (this month) · total 40 l`), so the line stays meaningful even right after a period reset.
@@ -18,7 +31,7 @@ First public Modhub release.
 - The "no matching barn" status text is no longer truncated in the detail panel (value field widened, texts shortened).
 
 ### Changed
-- Version bumped 0.4.1.0 -> 1.0.0.0; `descVersion` 111 -> 114.
+- Version bumped 0.4.1.0 -> 1.0.0.0; `descVersion` 111 -> 114 (-> 115 in review round 2).
 - Mod title capitalized ("Milk Contract" / "Milchvertrag").
 - Early cancellation of a no-obligation ("free") contract no longer charges a termination penalty.
 - A contract can no longer be signed without owning a barn that produces the matching milk type.

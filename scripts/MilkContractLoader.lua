@@ -28,7 +28,8 @@ function MilkContractLoader.registerSchema()
 
     schema:register(XMLValueType.STRING, key .. ".pricing#type", "market|fixed")
     schema:register(XMLValueType.FLOAT,  key .. ".pricing#marketMultiplier", "", 1.0)
-    schema:register(XMLValueType.FLOAT,  key .. ".pricing#pricePerLiter", "")
+    schema:register(XMLValueType.FLOAT,  key .. ".pricing#factor", "Festpreis als Faktor auf den Milchpreis (wird beim Abschluss fixiert)")
+    schema:register(XMLValueType.FLOAT,  key .. ".pricing#pricePerLiter", "Absoluter Festpreis (Altformat, skaliert nicht mit der Wirtschaft)")
 
     schema:register(XMLValueType.STRING, key .. ".quota#type", "none|minimum|maximum")
     schema:register(XMLValueType.FLOAT,  key .. ".quota#percentOfEstimated", "")
@@ -83,6 +84,7 @@ local function loadDairy(xmlFile, key)
     if d.pricing.type == "market" then
         d.pricing.marketMultiplier = xmlFile:getValue(key .. ".pricing#marketMultiplier", 1.0)
     else
+        d.pricing.factor        = xmlFile:getValue(key .. ".pricing#factor")
         d.pricing.pricePerLiter = xmlFile:getValue(key .. ".pricing#pricePerLiter")
     end
 
